@@ -17,10 +17,11 @@ uint32_t replyDelay = 200;
 char stoveRxData[2];
 uint8_t ON_TEMP = 70;
 
-void toggleStove()
+void ICACHE_RAM_ATTR toggleStove()
 {
     if (stoveState == 0)
     {
+        Serial.println("ON");
         for (int i = 0; i < 4; i++)
         {
             StoveSerial.write(stoveOn[i]);
@@ -29,6 +30,7 @@ void toggleStove()
     }
     else
     {
+        Serial.println("OFF");
         for (int i = 0; i < 4; i++)
         {
             StoveSerial.write(stoveOff[i]);
@@ -119,6 +121,7 @@ void setup()
     Serial.begin(115200);
     StoveSerial.begin(1200);
     StoveSerial.enableIntTx(false);
+    pinMode(D3, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(D3), toggleStove, FALLING);
 }
 
@@ -128,21 +131,6 @@ void loop()
     while (Serial.available())
     {
         StoveSerial.write(Serial.read());
-        if (Serial.read() == 'ON')
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                StoveSerial.write(stoveOn[i]);
-                delayMicroseconds(800);
-            }
-        }
-        else if (Serial.read() == 'OFF')
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                StoveSerial.write(stoveOff[i]);
-                delayMicroseconds(800);
-            }
-        }
+        Serial.println("Manual");
     }
 }
