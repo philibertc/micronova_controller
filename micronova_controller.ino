@@ -17,30 +17,40 @@ uint32_t replyDelay = 200;
 char stoveRxData[2];
 uint8_t ON_TEMP = 70;
 
-void ICACHE_RAM_ATTR toggleStove()
+void IRAM_ATTR toggleStove_debounced()
 {
     if (stoveState == 0)
     {
         Serial.println("ON");
+        stoveState = 1;
         for (int i = 0; i < 4; i++)
         {
             StoveSerial.write(stoveOn[i]);
             delayMicroseconds(800);
         }
     }
-    else
+    else if (stoveState == 1)
     {
         Serial.println("OFF");
+        stoveState = 0;
         for (int i = 0; i < 4; i++)
         {
             StoveSerial.write(stoveOff[i]);
             delayMicroseconds(800);
         }
     }
-    if (stoveState == 0)
+}
+
+void IRAM_ATTR toggleStove()
+{
+    static unsigned long last_interrupt_time = 0;
+    unsigned long interrupt_time = millis();
+    // If interrupts come faster than 200ms, assume it's a bounce and ignore
+    if (interrupt_time - last_interrupt_time > 100)
     {
-        stoveState = 1;
+        toggleStove_debounced();
     }
+    last_interrupt_time = interrupt_time;
 }
 
 void getStoveState()
