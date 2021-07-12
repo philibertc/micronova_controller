@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-SoftwareSerial StoveSerial(D1, D2);
+SoftwareSerial StoveSerial;
 
 const char stoveOn[4] = {0x80, 0x21, 0x01, 0xA2};
 const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
@@ -12,10 +12,8 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 
 uint8_t tempAmbient, tempFumes, powerStove;
 uint8_t stoveState = 0, lastStoveVal = 0;
-bool ack = false;
 uint32_t replyDelay = 200;
 char stoveRxData[2];
-uint8_t ON_TEMP = 70;
 
 void IRAM_ATTR toggleStove_debounced()
 {
@@ -23,21 +21,25 @@ void IRAM_ATTR toggleStove_debounced()
     {
         Serial.println("ON");
         stoveState = 1;
+        StoveSerial.enableTx(true);
         for (int i = 0; i < 4; i++)
         {
             StoveSerial.write(stoveOn[i]);
             delayMicroseconds(800);
         }
+        StoveSerial.enableTx(false);
     }
     else if (stoveState == 1)
     {
         Serial.println("OFF");
         stoveState = 0;
+        StoveSerial.enableTx(true);
         for (int i = 0; i < 4; i++)
         {
             StoveSerial.write(stoveOff[i]);
             delayMicroseconds(800);
         }
+        StoveSerial.enableTx(false);
     }
 }
 
@@ -45,7 +47,7 @@ void IRAM_ATTR toggleStove()
 {
     static unsigned long last_interrupt_time = 0;
     unsigned long interrupt_time = millis();
-    // If interrupts come faster than 200ms, assume it's a bounce and ignore
+    // If interrupts come faster than 100ms, assume it's a bounce and ignore
     if (interrupt_time - last_interrupt_time > 100)
     {
         toggleStove_debounced();
@@ -53,18 +55,29 @@ void IRAM_ATTR toggleStove()
     last_interrupt_time = interrupt_time;
 }
 
+void getStates()
+{
+    getStoveState();
+    getFumeTemp();
+    getStovePower();
+}
+
 void getStoveState()
 {
     const char readByte = 0x00;
+    StoveSerial.enableTx(true);
     StoveSerial.write(readByte);
     delay(1);
     StoveSerial.write(stoveStatus);
+    StoveSerial.enableTx(false);
     delay(replyDelay);
     checkStoveReply();
 
+    StoveSerial.enableTx(true);
     StoveSerial.write(readByte);
     delay(1);
     StoveSerial.write(ambTemp);
+    StoveSerial.enableTx(false);
     delay(replyDelay);
     checkStoveReply();
 }
@@ -72,9 +85,11 @@ void getStoveState()
 void getFumeTemp()
 {
     const char readByte = 0x00;
+    StoveSerial.enableTx(true);
     StoveSerial.write(readByte);
     delay(1);
     StoveSerial.write(fumeTemp);
+    StoveSerial.enableTx(false);
     delay(replyDelay);
     checkStoveReply();
 }
@@ -82,9 +97,11 @@ void getFumeTemp()
 void getStovePower()
 {
     const char readByte = 0x00;
+    StoveSerial.enableTx(true);
     StoveSerial.write(readByte);
     delay(1);
     StoveSerial.write(stovePower);
+    StoveSerial.enableTx(false);
     delay(replyDelay);
     checkStoveReply();
 }
@@ -129,8 +146,8 @@ void checkStoveReply()
 void setup()
 {
     Serial.begin(115200);
-    StoveSerial.begin(1200);
-    StoveSerial.enableIntTx(false);
+    StoveSerial.begin(1200, SWSERIAL_8N2, D1, D1, false, 256);
+    //StoveSerial.enableIntTx(false);
     pinMode(D3, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(D3), toggleStove, FALLING);
 }
@@ -138,9 +155,4 @@ void setup()
 void loop()
 {
     checkStoveReply();
-    while (Serial.available())
-    {
-        StoveSerial.write(Serial.read());
-        Serial.println("Manual");
-    }
 }
