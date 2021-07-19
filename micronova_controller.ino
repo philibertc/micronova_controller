@@ -150,6 +150,8 @@ void setup()
     //StoveSerial.enableIntTx(false);
     pinMode(D3, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(D3), toggleStove, FALLING);
+    delay(2000);
+    getStates();
 }
 
 void loop()
