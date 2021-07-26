@@ -6,7 +6,7 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 
 #define stoveStatus 0x21
 
-//0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
+//0 - Off, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
 
 //Checksum: Code+Address+Value
 
@@ -16,14 +16,15 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 
 uint8_t tempAmbient, tempFumes, powerStove;
 uint8_t stoveState = 0, lastStoveVal = 0;
-uint32_t replyDelay = 200;
 char stoveRxData[2];
 
 void getStates()
 {
     getStoveState();
+    delay(200);
+    getAmbTemp
+    delay(200);
     getFumeTemp();
-    getStovePower();
 }
 
 void getStoveState()
@@ -34,15 +35,17 @@ void getStoveState()
     delay(1);
     StoveSerial.write(stoveStatus);
     StoveSerial.enableTx(false);
-    delay(replyDelay);
     checkStoveReply();
+}
 
+void getAmbTemp()
+{
+    const char readByte = 0x00;
     StoveSerial.enableTx(true);
     StoveSerial.write(readByte);
     delay(1);
     StoveSerial.write(ambTemp);
     StoveSerial.enableTx(false);
-    delay(replyDelay);
     checkStoveReply();
 }
 
@@ -54,19 +57,6 @@ void getFumeTemp()
     delay(1);
     StoveSerial.write(fumeTemp);
     StoveSerial.enableTx(false);
-    delay(replyDelay);
-    checkStoveReply();
-}
-
-void getStovePower()
-{
-    const char readByte = 0x00;
-    StoveSerial.enableTx(true);
-    StoveSerial.write(readByte);
-    delay(1);
-    StoveSerial.write(stovePower);
-    StoveSerial.enableTx(false);
-    delay(replyDelay);
     checkStoveReply();
 }
 
@@ -78,7 +68,6 @@ void checkStoveReply()
     while (StoveSerial.available())
     {
         stoveRxData[rxCount] = StoveSerial.read();
-        //Serial.write(stoveRxData[rxCount]);
         rxCount++;
     }
     if (rxCount == 2)
@@ -94,10 +83,6 @@ void checkStoveReply()
         case ambTemp:
             tempAmbient = val / 2;
             Serial.printf("T. amb. %d\n", tempAmbient);
-            break;
-        case stovePower:
-            powerStove = val;
-            Serial.printf("Power %d\n", powerStove);
             break;
         case fumeTemp:
             tempFumes = val;
