@@ -23,7 +23,7 @@ Electrical schema:
 - Connect to the `Stove Controller` WiFi network,
 - Setup your WiFi credentials,
 - Setup MQTT base_url (the IP of your MQTT broker),
-- Eventually configure the base_topic if you make several times this project.
+- Optionally adapt the base_topic name if you have multiple stoves.
 
 ## Home Assistant
 Here is what to add to `configuration.yaml`:
