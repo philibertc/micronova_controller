@@ -1,119 +1,76 @@
+#ifdef ESP8266
 #include <FS.h>
-#include <WiFiManager.h>
-#include <ArduinoJson.h>
-#include <PubSubClient.h>
 #include <SoftwareSerial.h>
-#ifdef ESP32
-  #include <SPIFFS.h>
-#endif
 SoftwareSerial StoveSerial;
+#define SERIAL_MODE SWSERIAL_8N2 //8 data bits, parity none, 2 stop bits
+#endif
+
+#ifdef ESP32
+#include <SPIFFS.h>
+#include <HardwareSerial.h>
+HardwareSerial StoveSerial(1);
+#define SERIAL_MODE SERIAL_8N2
+#endif
+
+#include <WiFiManager.h>
+#include <PubSubClient.h>
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 WiFiManager wm;
+WiFiManagerParameter custom_mqtt_server("server", "mqtt_server", "", 40);
+WiFiManagerParameter custom_mqtt_port("port", "mqtt_port", "1883", 40);
+WiFiManagerParameter custom_base_topic("topic", "base_topic", "micronova", 40);
+WiFiManagerParameter custom_mqtt_user("user", "mqtt_user", "", 40);
+WiFiManagerParameter custom_mqtt_pass("pass", "mqtt_pass", "", 40);
 
-#define concat(first, second) first second
-#define mqtt_server "192.168.1.1"
-#define mqtt_port "1883"
-#define base_topic "micronova"
-#define mqtt_user "username"
-#define mqtt_pass "password"
-#define ambtemp_topic concat(base_topic, "/ambtemp")
-#define fumetemp_topic concat(base_topic, "/fumetemp")
-#define state_topic concat(base_topic, "/state")
-#define in_topic concat(base_topic, "/intopic")
-#define onoff_topic concat(base_topic, "/onoff")
+String server;
+String port;
+String topic;
+String user;
+char *mqtt_user;
+String pass;
+char *mqtt_pass;
+String ambtemp_topic;
+char *char_ambtemp_topic;
+String fumetemp_topic;
+char *char_fumetemp_topic;
+String state_topic;
+char *char_state_topic;
+String onoff_topic;
+char *char_onoff_topic;
+String in_topic;
+char *char_in_topic;
 
 #define serialPin 16
 
-bool shouldSaveConfig = false;
-
-void saveConfigCallback()
+void saveParamsCallback()
 {
-    Serial.println("Should save config");
-    shouldSaveConfig = true;
+    Serial.println("Get Params:");
+    Serial.println(custom_mqtt_server.getValue());
+    Serial.println(custom_mqtt_port.getValue());
+    Serial.println(custom_base_topic.getValue());
+    Serial.println(custom_mqtt_user.getValue());
+    Serial.println(custom_mqtt_pass.getValue());
+    Serial.println(F("Initializing FS..."));
+    File file = SPIFFS.open("/config.txt", "a+"); //We open a file to save value on SPIFFS
+    file.println(custom_mqtt_server.getValue());  //1st line: MQTT server address
+    file.println(custom_mqtt_port.getValue());    //2nd line: MQTT port
+    file.println(custom_base_topic.getValue());   //3rd line: base topic
+    file.println(custom_mqtt_user.getValue());    //4th line: MQTT username
+    file.println(custom_mqtt_pass.getValue());    //5th line: MQTT password
 }
 
 void setup_wifi()
 {
-    if (SPIFFS.begin())
-    {
-        Serial.println("mounted file system");
-        if (SPIFFS.exists("/config.json"))
-        {
-            //file exists, reading and loading
-            Serial.println("reading config file");
-            File configFile = SPIFFS.open("/config.json", "r");
-            if (configFile)
-            {
-                Serial.println("opened config file");
-                size_t size = configFile.size();
-                // Allocate a buffer to store contents of the file.
-                std::unique_ptr<char[]> buf(new char[size]);
-
-                configFile.readBytes(buf.get(), size);
-                DynamicJsonBuffer jsonBuffer;
-                JsonObject &json = jsonBuffer.parseObject(buf.get());
-                json.printTo(Serial);
-                if (json.success())
-                {
-                    Serial.println("\nparsed json");
-                    strcpy(mqtt_server, json["mqtt_server"]);
-                    strcpy(mqtt_port, json["mqtt_port"]);
-                    strcpy(mqtt_user, json["mqtt_user"]);
-                    strcpy(mqtt_pass, json["mqtt_pass"]);
-                    strcpy(base_topic, json["base_topic"]);
-                }
-                else
-                {
-                    Serial.println("failed to load json config");
-                }
-            }
-        }
-    }
-    else
-    {
-        Serial.println("failed to mount FS");
-    }
-    WiFiManagerParameter custom_mqtt_server("server", "mqtt_server", mqtt_server, 40);
-    WiFiManagerParameter custom_mqtt_port("port", "mqtt_port", mqtt_port, 6);
-    WiFiManagerParameter custom_mqtt_user("user", "mqtt_user", mqtt_user, 20);
-    WiFiManagerParameter custom_mqtt_pass("pass", "mqtt_pass", mqtt_pass, 20);
-    WiFiManagerParameter custom_base_topic("topic", "base_topic", base_topic, 20);
-    wm.setSaveConfigCallback(saveConfigCallback);
+    WiFi.mode(WIFI_STA);
     wm.addParameter(&custom_mqtt_server);
     wm.addParameter(&custom_mqtt_port);
+    wm.addParameter(&custom_base_topic);
     wm.addParameter(&custom_mqtt_user);
     wm.addParameter(&custom_mqtt_pass);
-    wm.addParameter(&custom_base_topic);
-    WiFi.mode(WIFI_STA);
+    wm.setSaveParamsCallback(saveParamsCallback); //Saves the settings in SPIFFS
     wm.autoConnect("Pellet Stove Controller");
-    strcpy(mqtt_server, custom_mqtt_server.getValue());
-    strcpy(mqtt_port, custom_mqtt_port.getValue());
-    strcpy(mqtt_user, custom_mqtt_user.getValue());
-    strcpy(mqtt_pass, custom_mqtt_pass.getValue());
-    strcpy(base_topic, custom_base_topic.getValue());
-    if (shouldSaveConfig)
-    {
-        Serial.println("saving config");
-        DynamicJsonBuffer jsonBuffer;
-        JsonObject &json = jsonBuffer.createObject();
-        json["mqtt_server"] = mqtt_server;
-        json["mqtt_port"] = mqtt_port;
-        json["mqtt_user"] = mqtt_user;
-        json["mqtt_pass"] = mqtt_pass;
-        json["base_topic"] = base_topic;
-
-        File configFile = SPIFFS.open("/config.json", "w");
-        if (!configFile)
-        {
-            Serial.println("failed to open config file for writing");
-        }
-
-        json.printTo(Serial);
-        json.printTo(configFile);
-        configFile.close();
-        //end save
-    }
 }
 
 void reconnect()
@@ -157,6 +114,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     else if ((char)payload[2] == 's')
     {
         wm.resetSettings();
+        SPIFFS.format();
         ESP.restart();
     }
 }
@@ -164,8 +122,69 @@ void callback(char *topic, byte *payload, unsigned int length)
 void setup()
 {
     Serial.begin(115200);
-    StoveSerial.begin(1200, SWSERIAL_8N2, serialPin, serialPin, false, 256);
+    StoveSerial.begin(1200, SERIAL_MODE, serialPin, serialPin, false, 256);
+    if (SPIFFS.begin())
+    {
+        Serial.println(F("SPIFFS system mounted with success"));
+    }
+    else
+    {
+        Serial.println(F("An Error has occurred while mounting SPIFFS"));
+    }
     setup_wifi();
+    int line = 0;
+    File configFile = SPIFFS.open("/config.txt", "r");
+    while (configFile.available())
+    {
+        if (line == 0)
+        {
+            String serverString = configFile.readStringUntil('\n');
+            server = serverString.c_str();
+            server.trim();
+        }
+        if (line == 1)
+        {
+            String portString = configFile.readStringUntil('\n');
+            port = portString.c_str();
+            port.trim();
+        }
+        if (line == 2)
+        {
+            String topicString = configFile.readStringUntil('\n');
+            topic = topicString.c_str();
+            topic.trim();
+            ambtemp_topic += topic;
+            fumetemp_topic += topic;
+            state_topic += topic;
+            onoff_topic += topic;
+            in_topic += topic;
+            ambtemp_topic += "/ambtemp";
+            fumetemp_topic += "/fumetemp";
+            state_topic += "/state";
+            onoff_topic += "/onoff";
+            in_topic += "/intopic";
+            ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
+            fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
+            state_topic.toCharArray(char_state_topic, 50);
+            onoff_topic.toCharArray(char_onoff_topic, 50);
+            in_topic.toCharArray(char_in_topic, 50);
+        }
+        if (line == 3)
+        {
+            String userString = configFile.readStringUntil('\n');
+            user = userString.c_str();
+            user.trim();
+            user.toCharArray(mqtt_user, 50);
+        }
+        if (line == 4)
+        {
+            String passString = configFile.readStringUntil('\n');
+            pass = passString.c_str();
+            pass.trim();
+            user.toCharArray(mqtt_pass, 50);
+        }
+        line++;
+    }
     /*client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
     client.subscribe(in_topic);*/
@@ -176,18 +195,7 @@ void loop()
     /*if (!client.connected())
     {
         reconnect();
-        client.subscribe(in_topic);
+        client.subscribe(char_in_topic);
     }
     client.loop();*/
-    delay(5000);
-    Serial.println(mqtt_server);
-    Serial.println(mqtt_port);
-    Serial.println(mqtt_user);
-    Serial.println(mqtt_pass);
-    Serial.println(base_topic);
-    Serial.println(ambtemp_topic);
-    Serial.println(fumetemp_topic);
-    Serial.println(state_topic);
-    Serial.println(onoff_topic);
-    Serial.println(in_topic);
 }
