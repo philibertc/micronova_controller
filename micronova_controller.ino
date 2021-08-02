@@ -24,23 +24,26 @@ WiFiManagerParameter custom_base_topic("topic", "base_topic", "micronova", 40);
 WiFiManagerParameter custom_mqtt_user("user", "mqtt_user", "", 40);
 WiFiManagerParameter custom_mqtt_pass("pass", "mqtt_pass", "", 40);
 
-String server;
-String port;
-String topic;
-String user;
-char *mqtt_user;
-String pass;
-char *mqtt_pass;
+String mqtt_server;
+char char_mqtt_server[50];
+String mqtt_port;
+char char_mqtt_port[50];
+String mqtt_topic;
+char char_mqtt_topic[50];
+String mqtt_user;
+char char_mqtt_user[50];
+String mqtt_pass;
+char char_mqtt_pass[50];
 String ambtemp_topic;
-char *char_ambtemp_topic;
+char char_ambtemp_topic[50];
 String fumetemp_topic;
-char *char_fumetemp_topic;
+char char_fumetemp_topic[50];
 String state_topic;
-char *char_state_topic;
+char char_state_topic[50];
 String onoff_topic;
-char *char_onoff_topic;
+char char_onoff_topic[50];
 String in_topic;
-char *char_in_topic;
+char char_in_topic[50];
 
 #define serialPin 16
 
@@ -70,6 +73,7 @@ void setup_wifi()
     wm.addParameter(&custom_mqtt_user);
     wm.addParameter(&custom_mqtt_pass);
     wm.setSaveParamsCallback(saveParamsCallback); //Saves the settings in SPIFFS
+    wm.setConnectTimeout(30);
     wm.autoConnect("Pellet Stove Controller");
 }
 
@@ -79,7 +83,7 @@ void reconnect()
     while (!client.connected())
     {
         Serial.print("Attempting MQTT connection...");
-        if (client.connect("Micronova", mqtt_user, mqtt_pass))
+        if (client.connect("Micronova", char_mqtt_user, char_mqtt_pass))
         {
             Serial.println("connected");
         }
@@ -92,6 +96,14 @@ void reconnect()
             delay(5000);
         }
     }
+}
+
+void fullReset()
+{
+    Serial.println("Resetting…");
+    wm.resetSettings();
+    SPIFFS.format();
+    ESP.restart();
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -113,81 +125,98 @@ void callback(char *topic, byte *payload, unsigned int length)
     }
     else if ((char)payload[2] == 's')
     {
-        wm.resetSettings();
-        SPIFFS.format();
-        ESP.restart();
+        fullReset();
     }
 }
 
 void setup()
 {
+    pinMode(4, INPUT_PULLUP);
+    if (digitalRead(4) == LOW)
+    {
+        fullReset();
+    }
     Serial.begin(115200);
     StoveSerial.begin(1200, SERIAL_MODE, serialPin, serialPin, false, 256);
     if (SPIFFS.begin())
     {
-        Serial.println(F("SPIFFS system mounted with success"));
+        Serial.println("SPIFFS system mounted with success");
     }
     else
     {
-        Serial.println(F("An Error has occurred while mounting SPIFFS"));
+        Serial.println("An Error has occurred while mounting SPIFFS");
     }
     setup_wifi();
-    int line = 0;
     File configFile = SPIFFS.open("/config.txt", "r");
+    Serial.println("Reading values");
+    int line = 0;
     while (configFile.available())
     {
         if (line == 0)
         {
             String serverString = configFile.readStringUntil('\n');
-            server = serverString.c_str();
-            server.trim();
+            mqtt_server = serverString.c_str();
+            mqtt_server.trim();
+            mqtt_server.toCharArray(char_mqtt_server, 50);
+            Serial.println(char_mqtt_server);
         }
         if (line == 1)
         {
             String portString = configFile.readStringUntil('\n');
-            port = portString.c_str();
-            port.trim();
+            mqtt_port = portString.c_str();
+            mqtt_port.trim();
+            mqtt_port.toCharArray(char_mqtt_port, 50);
+            Serial.println(char_mqtt_port);
         }
         if (line == 2)
         {
             String topicString = configFile.readStringUntil('\n');
-            topic = topicString.c_str();
-            topic.trim();
-            ambtemp_topic += topic;
-            fumetemp_topic += topic;
-            state_topic += topic;
-            onoff_topic += topic;
-            in_topic += topic;
+            mqtt_topic = topicString.c_str();
+            mqtt_topic.trim();
+            mqtt_topic.toCharArray(char_mqtt_topic, 50);
+            Serial.println(char_mqtt_topic);
+            ambtemp_topic += mqtt_topic;
+            fumetemp_topic += mqtt_topic;
+            state_topic += mqtt_topic;
+            onoff_topic += mqtt_topic;
+            in_topic += mqtt_topic;
             ambtemp_topic += "/ambtemp";
             fumetemp_topic += "/fumetemp";
             state_topic += "/state";
             onoff_topic += "/onoff";
             in_topic += "/intopic";
             ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
+            Serial.println(char_ambtemp_topic);
             fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
+            Serial.println(char_fumetemp_topic);
             state_topic.toCharArray(char_state_topic, 50);
+            Serial.println(char_state_topic);
             onoff_topic.toCharArray(char_onoff_topic, 50);
+            Serial.println(char_onoff_topic);
             in_topic.toCharArray(char_in_topic, 50);
+            Serial.println(char_in_topic);
         }
         if (line == 3)
         {
             String userString = configFile.readStringUntil('\n');
-            user = userString.c_str();
-            user.trim();
-            user.toCharArray(mqtt_user, 50);
+            mqtt_user = userString.c_str();
+            mqtt_user.trim();
+            mqtt_user.toCharArray(char_mqtt_user, 50);
+            Serial.println(char_mqtt_user);
         }
         if (line == 4)
         {
             String passString = configFile.readStringUntil('\n');
-            pass = passString.c_str();
-            pass.trim();
-            user.toCharArray(mqtt_pass, 50);
+            mqtt_pass = passString.c_str();
+            mqtt_pass.trim();
+            mqtt_user.toCharArray(char_mqtt_pass, 50);
+            Serial.println(char_mqtt_pass);
         }
         line++;
     }
-    /*client.setServer(mqtt_server, 1883);
+    /*client.setServer(char_mqtt_server, char_mqtt_port);
     client.setCallback(callback);
-    client.subscribe(in_topic);*/
+    client.subscribe(char_in_topic);*/
 }
 
 void loop()
