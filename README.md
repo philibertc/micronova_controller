@@ -1,4 +1,4 @@
-# micronova_controller ![ESP8266](https://img.shields.io/badge/ESP-8266-000000.svg?longCache=true&style=flat&colorA=CC101F) ![ESP32](https://img.shields.io/badge/ESP-32-000000.svg?longCache=true&style=flat&colorA=CC101F)
+# micronova_controller ![ESP8266](https://img.shields.io/badge/ESP-8266-000000.svg?longCache=true&style=flat&colorA=CCCC33) ![ESP32](https://img.shields.io/badge/ESP-32-000000.svg?longCache=true&style=flat&colorA=CC101F)
 <a href="https://www.paypal.com/donate?hosted_button_id=Q48QBGGQTVGTG">
   <img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width=150 />
 </a>
@@ -6,10 +6,7 @@
 This Arduino program allows to control easily via MQTT a pellet stove equipped with a MicroNova mainboard.
 
 ## The circuit
-On breadboard:
-![image](https://user-images.githubusercontent.com/57588282/127031692-c1dd1c95-987d-42d3-bf3d-23146b8f2eec.png)
-Electrical schema:
-![image](https://user-images.githubusercontent.com/57588282/127032442-d4bb1e1b-df1b-4e90-8297-b0b436b67163.png)
+![image](https://user-images.githubusercontent.com/57588282/128608590-39b0e0ff-b224-42bd-bb20-524a78f282f6.png)
 
 ## Uploading firmware
 ### With esptool or NodeMCU PyFlasher
