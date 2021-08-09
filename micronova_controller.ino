@@ -450,12 +450,15 @@ void setup()
 
 void loop()
 {
-    client.loop();
     if (!client.connected())
     {
         Serial.println("Reconnecting");
         reconnect();
         client.subscribe(char_in_topic);
+    }
+    else
+    {
+        client.loop();
     }
     unsigned long currentMillis = millis();
     if (previousMillis > currentMillis)
