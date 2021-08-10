@@ -21,7 +21,6 @@ HardwareSerial StoveSerial(1);
 
 #include <WiFiManager.h>
 #include <PubSubClient.h>
-#include <string>
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -31,9 +30,7 @@ WiFiManagerParameter custom_mqtt_port("port", "mqtt_port", "1883", 10);
 WiFiManagerParameter custom_base_topic("topic", "base_topic", "micronova", 40);
 WiFiManagerParameter custom_mqtt_user("user", "mqtt_user", "", 40);
 WiFiManagerParameter custom_mqtt_pass("pass", "mqtt_pass", "", 40);
-WiFiManagerParameter custom_hydro_mode("hydro", "hydro_mode", "0", 5);
-
-unsigned long previousMillis;
+WiFiManagerParameter custom_hydro_mode("hydro", "hydro_mode", "0", 2);
 
 String mqtt_server;
 char char_mqtt_server[50];
@@ -61,8 +58,6 @@ String in_topic;
 char char_in_topic[50];
 String hydro_mode;
 int int_hydro_mode;
-
-//This test turns on the stove, waits 2 sec and turns off the stove.
 
 //0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
 
@@ -123,11 +118,11 @@ void reconnect()
     // Loop until we're reconnected
     while (!client.connected())
     {
+        Serial.println(char_mqtt_user);
+        Serial.println(char_mqtt_pass);
         Serial.print("Attempting MQTT connection...");
-        // Create a random client ID
         String clientId = "ESPClient-";
-        clientId += String(random(0xffff), HEX);
-        // Attempt to connect
+        clientId += String(random(0xffff), HEX); //Random client ID
         if (client.connect(clientId.c_str(), char_mqtt_user, char_mqtt_pass))
         {
             Serial.println("connected");
@@ -161,8 +156,7 @@ void callback(char *topic, byte *payload, unsigned int length)
         Serial.print((char)payload[i]);
     }
     Serial.println();
-
-    if ((char)payload[1] == 'N')
+    if ((char *)payload == "ON")
     {
         for (int i = 0; i < 4; i++)
         {
@@ -170,7 +164,7 @@ void callback(char *topic, byte *payload, unsigned int length)
             delay(1);
         }
     }
-    else if ((char)payload[1] == 'F')
+    else if ((char *)payload == "OFF")
     {
         for (int i = 0; i < 4; i++)
         {
@@ -241,8 +235,6 @@ void checkStoveReply() //Works only when request is RAM
         byte val = stoveRxData[1];
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
-        std::string s;
-        char const *pchar;
         Serial.printf("Param=%01x value=%01x", param, val);
         switch (param)
         {
@@ -251,63 +243,63 @@ void checkStoveReply() //Works only when request is RAM
             switch (stoveState)
             {
             case 0:
-                client.publish(char_state_topic, "Off");
+                client.publish(char_state_topic, "Off", true);
                 delay(1000);
-                client.publish(char_onoff_topic, "OFF");
+                client.publish(char_onoff_topic, "OFF", true);
                 break;
             case 1:
-                client.publish(char_state_topic, "Starting");
+                client.publish(char_state_topic, "Starting", true);
                 delay(1000);
-                client.publish(char_onoff_topic, "ON");
+                client.publish(char_onoff_topic, "ON", true);
                 break;
             case 2:
-                client.publish(char_state_topic, "Pellet loading");
+                client.publish(char_state_topic, "Pellet loading", true);
                 break;
             case 3:
-                client.publish(char_state_topic, "Ignition");
+                client.publish(char_state_topic, "Ignition", true);
                 break;
             case 4:
-                client.publish(char_state_topic, "Work");
+                client.publish(char_state_topic, "Work", true);
                 break;
             case 5:
-                client.publish(char_state_topic, "Brazier cleaning");
+                client.publish(char_state_topic, "Brazier cleaning", true);
                 break;
             case 6:
-                client.publish(char_state_topic, "Final cleaning");
+                client.publish(char_state_topic, "Final cleaning", true);
                 break;
             case 7:
-                client.publish(char_state_topic, "Standby");
+                client.publish(char_state_topic, "Standby", true);
                 break;
             case 8:
-                client.publish(char_state_topic, "Pellet missing");
+                client.publish(char_state_topic, "Pellet missing", true);
                 break;
             case 9:
-                client.publish(char_state_topic, "Ignition failure");
+                client.publish(char_state_topic, "Ignition failure", true);
                 break;
             case 10:
-                client.publish(char_state_topic, "Alarm");
+                client.publish(char_state_topic, "Alarm", true);
                 break;
             }
             Serial.printf("Stove %s\n", stoveState ? "ON" : "OFF");
             break;
         case ambTemp:
             tempAmbient = val / 2;
-            client.publish(char_ambtemp_topic, String(tempAmbient).c_str());
+            client.publish(char_ambtemp_topic, String(tempAmbient).c_str(), true);
             Serial.printf("T. amb. %d\n", tempAmbient);
             break;
         case fumeTemp:
             tempFumes = val;
-            client.publish(char_fumetemp_topic, String(tempFumes).c_str());
+            client.publish(char_fumetemp_topic, String(tempFumes).c_str(), true);
             Serial.printf("T. fumes %d\n", tempFumes);
             break;
         case waterTemp:
             tempWater = val;
-            client.publish(char_watertemp_topic, String(tempWater).c_str());
+            client.publish(char_watertemp_topic, String(tempWater).c_str(), true);
             Serial.printf("T. water %d\n", tempWater);
             break;
         case stovePower:
             flamePower = val;
-            client.publish(char_power_topic, String(flamePower).c_str());
+            client.publish(char_power_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
             break;
         }
@@ -425,24 +417,31 @@ void setup()
         mqtt_topic = topicString.c_str();
         mqtt_topic.trim();
         mqtt_topic.toCharArray(char_mqtt_topic, 50);
+        ambtemp_topic += mqtt_topic;
+        fumetemp_topic += mqtt_topic;
+        state_topic += mqtt_topic;
+        onoff_topic += mqtt_topic;
+        in_topic += mqtt_topic;
+        ambtemp_topic += "/ambtemp";
+        fumetemp_topic += "/fumetemp";
+        state_topic += "/state";
+        onoff_topic += "/onoff";
+        in_topic += "/intopic";
+        ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
+        fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
+        state_topic.toCharArray(char_state_topic, 50);
+        onoff_topic.toCharArray(char_onoff_topic, 50);
+        in_topic.toCharArray(char_in_topic, 50);
         mqtt_user = userString.c_str();
         mqtt_user.trim();
         mqtt_user.toCharArray(char_mqtt_user, 50);
         mqtt_pass = passString.c_str();
         mqtt_pass.trim();
         mqtt_pass.toCharArray(char_mqtt_pass, 50);
-        int_mqtt_port = mqtt_port.toInt();
         hydro_mode = hydroString.c_str();
         hydro_mode.trim();
         int_hydro_mode = hydro_mode.toInt();
     }
-    Serial.println("Success");
-    Serial.println(char_mqtt_server);
-    Serial.println(int_mqtt_port);
-    Serial.println(char_mqtt_topic);
-    Serial.println(char_mqtt_user);
-    Serial.println(char_mqtt_pass);
-    Serial.println(int_hydro_mode);
     client.setServer(char_mqtt_server, int_mqtt_port);
     client.setCallback(callback);
     client.subscribe(char_in_topic);
@@ -452,22 +451,8 @@ void loop()
 {
     if (!client.connected())
     {
-        Serial.println("Reconnecting");
         reconnect();
         client.subscribe(char_in_topic);
     }
-    else
-    {
-        client.loop();
-    }
-    unsigned long currentMillis = millis();
-    if (previousMillis > currentMillis)
-    {
-        previousMillis = 0;
-    }
-    if (currentMillis - previousMillis >= 10000)
-    {
-        previousMillis = currentMillis;
-        getStates();
-    }
+    client.loop();
 }
