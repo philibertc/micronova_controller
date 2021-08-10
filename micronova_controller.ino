@@ -33,6 +33,8 @@ WiFiManagerParameter custom_mqtt_user("user", "mqtt_user", "", 40);
 WiFiManagerParameter custom_mqtt_pass("pass", "mqtt_pass", "", 40);
 WiFiManagerParameter custom_hydro_mode("hydro", "hydro_mode", "0", 2);
 
+long previousMillis;
+
 String mqtt_server;
 char char_mqtt_server[50];
 String mqtt_port;
@@ -453,4 +455,14 @@ void loop()
         client.subscribe(char_in_topic);
     }
     client.loop();
+    unsigned long currentMillis = millis();
+    if (previousMillis > currentMillis)
+    {
+        previousMillis = 0;
+    }
+    if (currentMillis - previousMillis >= 10000)
+    {
+        previousMillis = currentMillis;
+        getStates();
+    }
 }
