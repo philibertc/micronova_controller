@@ -3,7 +3,7 @@
 #include <SoftwareSerial.h>
 SoftwareSerial StoveSerial;
 #define SERIAL_MODE SWSERIAL_8N2 //8 data bits, parity none, 2 stop bits
-#define RESET_PIN D1
+#define RESET_PIN D5
 #define RX_PIN D3
 #define TX_PIN D4
 #define ENABLE_RX D2
@@ -138,7 +138,7 @@ void reconnect()
     }
 }
 
-void fullReset()
+void IRAM_ATTR fullReset()
 {
     Serial.println("Resetting…");
     wm.resetSettings();
@@ -382,10 +382,7 @@ void setup()
     pinMode(ENABLE_RX, OUTPUT);
     digitalWrite(ENABLE_RX, HIGH); //The led of the optocoupler is off
     pinMode(RESET_PIN, INPUT_PULLUP);
-    if (digitalRead(RESET_PIN) == LOW)
-    {
-        fullReset();
-    }
+    attachInterrupt(digitalPinToInterrupt(RESET_PIN), fullReset, FALLING);
     Serial.begin(115200);
     StoveSerial.begin(1200, SERIAL_MODE, RX_PIN, TX_PIN, false, 256);
     if (SPIFFS.begin())
