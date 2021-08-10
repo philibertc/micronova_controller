@@ -22,9 +22,9 @@ The optocouplers are used to convert between 3.3V and 5V logic and also to prote
 - Connect your ESP to your computer,
 - Flash your ESP with that hex file (for esptool: `esptool write_flash *.hex`).
 ### With Arduino IDE
-- Install ESP cards with the board manager (custom URLs: http://arduino.esp8266.com/stable/package_esp8266com_index.json,https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json),
+- Install ESP cards with the board manager (custom URLs: `http://arduino.esp8266.com/stable/package_esp8266com_index.json,https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`),
 - Install WifiManager and PubSubClient libraries,
-- Copy the content of `micronova-controller.ino`,
+- Copy the content of `micronova_controller.ino`,
 - Connect your ESP to your computer and flash.
 
 ## Configure WiFi and the MQTT broker URL
