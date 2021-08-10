@@ -14,9 +14,10 @@ SoftwareSerial StoveSerial;
 #include <HardwareSerial.h>
 HardwareSerial StoveSerial(1);
 #define SERIAL_MODE SERIAL_8N2 //8 data bits, parity none, 2 stop bits
-#define RESET_PIN 36
-#define RX_PIN 39
-#define TX_PIN 34
+#define RESET_PIN 25
+#define RX_PIN 32
+#define TX_PIN 33
+#define ENABLE_RX 35
 #endif
 
 #include <WiFiManager.h>
