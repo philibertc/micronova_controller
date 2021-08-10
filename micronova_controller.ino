@@ -52,8 +52,8 @@ String watertemp_topic;
 char char_watertemp_topic[50];
 String state_topic;
 char char_state_topic[50];
-String power_topic;
-char char_power_topic[50];
+String flame_topic;
+char char_flame_topic[50];
 String onoff_topic;
 char char_onoff_topic[50];
 String in_topic;
@@ -73,13 +73,13 @@ const char stove3[4] = {0x80, 0x34, 0x03, 0xB7};
 const char stove4[4] = {0x80, 0x34, 0x04, 0xB8};
 const char stove5[4] = {0x80, 0x34, 0x05, 0xB9};
 
-#define stoveStatus 0x21
-#define ambTemp 0x01
-#define fumeTemp 0x5A
-#define waterTemp 0x03
-#define stovePower 0x34
-uint8_t stoveState, tempFumes, tempWater, flamePower;
-float tempAmbient;
+#define stoveStateAddr 0x21
+#define ambTempAddr 0x01
+#define fumesTempAddr 0x5A
+#define waterTempAddr 0x03
+#define flamePowerAddr 0x34
+uint8_t stoveState, fumesTemp, flamePower, waterTemp;
+float ambTemp;
 char stoveRxData[2];
 
 void saveParamsCallback()
@@ -240,7 +240,7 @@ void checkStoveReply() //Works only when request is RAM
         Serial.printf("Param=%01x value=%01x", param, val);
         switch (param)
         {
-        case stoveStatus:
+        case stoveStateAddr:
             stoveState = val;
             switch (stoveState)
             {
@@ -284,25 +284,25 @@ void checkStoveReply() //Works only when request is RAM
             }
             Serial.printf("Stove %s\n", stoveState ? "ON" : "OFF");
             break;
-        case ambTemp:
-            tempAmbient = val / 2;
-            client.publish(char_ambtemp_topic, String(tempAmbient).c_str(), true);
-            Serial.printf("T. amb. %d\n", tempAmbient);
+        case ambTempAddr:
+            ambTemp = val / 2;
+            client.publish(char_ambtemp_topic, String(ambTemp).c_str(), true);
+            Serial.printf("T. amb. %d\n", ambTemp);
             break;
-        case fumeTemp:
-            tempFumes = val;
-            client.publish(char_fumetemp_topic, String(tempFumes).c_str(), true);
-            Serial.printf("T. fumes %d\n", tempFumes);
+        case fumesTempAddr:
+            fumesTemp = val;
+            client.publish(char_fumetemp_topic, String(fumesTemp).c_str(), true);
+            Serial.printf("T. fumes %d\n", fumesTemp);
             break;
-        case waterTemp:
-            tempWater = val;
-            client.publish(char_watertemp_topic, String(tempWater).c_str(), true);
-            Serial.printf("T. water %d\n", tempWater);
-            break;
-        case stovePower:
+        case flamePowerAddr:
             flamePower = val;
-            client.publish(char_power_topic, String(flamePower).c_str(), true);
+            client.publish(char_flame_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
+            break;
+        case waterTempAddr:
+            waterTemp = val;
+            client.publish(char_watertemp_topic, String(waterTemp).c_str(), true);
+            Serial.printf("T. water %d\n", waterTemp);
             break;
         }
     }
@@ -313,18 +313,7 @@ void getStoveState()
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(stoveStatus);
-    digitalWrite(ENABLE_RX, LOW);
-    delay(60);
-    checkStoveReply();
-}
-
-void getStovePower()
-{
-    const byte readByte = 0x00;
-    StoveSerial.write(readByte);
-    delay(1);
-    StoveSerial.write(stovePower);
+    StoveSerial.write(stoveStateAddr);
     digitalWrite(ENABLE_RX, LOW);
     delay(60);
     checkStoveReply();
@@ -335,7 +324,7 @@ void getAmbTemp()
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(ambTemp);
+    StoveSerial.write(ambTempAddr);
     digitalWrite(ENABLE_RX, LOW);
     delay(60);
     checkStoveReply();
@@ -346,7 +335,18 @@ void getFumeTemp()
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(fumeTemp);
+    StoveSerial.write(fumesTempAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}
+
+void getFlamePower()
+{
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(flamePowerAddr);
     digitalWrite(ENABLE_RX, LOW);
     delay(60);
     checkStoveReply();
@@ -357,7 +357,7 @@ void getWaterTemp()
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(waterTemp);
+    StoveSerial.write(waterTempAddr);
     digitalWrite(ENABLE_RX, LOW);
     delay(60);
     checkStoveReply();
@@ -368,11 +368,11 @@ void getStates()
 
     getStoveState();
     delay(100);
-    getStovePower();
-    delay(100);
     getAmbTemp();
     delay(100);
     getFumeTemp();
+    delay(100);
+    getFlamePower();
     if (int_hydro_mode == 1)
     {
         getWaterTemp();
@@ -417,16 +417,22 @@ void setup()
         mqtt_topic.trim();
         ambtemp_topic += mqtt_topic;
         fumetemp_topic += mqtt_topic;
+        watertemp_topic += mqtt_topic;
+        flame_topic += mqtt_topic;
         state_topic += mqtt_topic;
         onoff_topic += mqtt_topic;
         in_topic += mqtt_topic;
         ambtemp_topic += "/ambtemp";
         fumetemp_topic += "/fumetemp";
+        watertemp_topic += "/watertemp";
+        flame_topic += "/flamepower";
         state_topic += "/state";
         onoff_topic += "/onoff";
         in_topic += "/intopic";
         ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
         fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
+        watertemp_topic.toCharArray(char_watertemp_topic, 50);
+        flame_topic.toCharArray(char_flame_topic, 50);
         state_topic.toCharArray(char_state_topic, 50);
         onoff_topic.toCharArray(char_onoff_topic, 50);
         in_topic.toCharArray(char_in_topic, 50);
