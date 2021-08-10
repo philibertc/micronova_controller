@@ -40,7 +40,6 @@ char char_mqtt_server[50];
 String mqtt_port;
 int int_mqtt_port;
 String mqtt_topic;
-char char_mqtt_topic[50];
 String mqtt_user;
 char char_mqtt_user[50];
 String mqtt_pass;
@@ -416,7 +415,6 @@ void setup()
         int_mqtt_port = mqtt_port.toInt();
         mqtt_topic = topicString.c_str();
         mqtt_topic.trim();
-        mqtt_topic.toCharArray(char_mqtt_topic, 50);
         ambtemp_topic += mqtt_topic;
         fumetemp_topic += mqtt_topic;
         state_topic += mqtt_topic;
