@@ -80,9 +80,9 @@ const char stove5[4] = {0x80, 0x34, 0x05, 0xB9};
 #define flamePowerAddr 0x34
 uint8_t stoveState, fumesTemp, flamePower, waterTemp;
 float ambTemp;
-char stoveRxData[2];
+char stoveRxData[2]; //When the heating is sending data, it sends two bytes: a checksum and the value
 
-void saveParamsCallback()
+void saveParamsCallback() //Save params to SPIFFS
 {
     Serial.println("Get Params:");
     Serial.println(custom_mqtt_server.getValue());
@@ -101,7 +101,7 @@ void saveParamsCallback()
     file.println(custom_hydro_mode.getValue());   //6th line: Hydro mode
 }
 
-void setup_wifi()
+void setup_wifi() //Setup WiFiManager and connect to WiFi
 {
     WiFi.mode(WIFI_STA);
     wm.addParameter(&custom_mqtt_server);
@@ -115,9 +115,9 @@ void setup_wifi()
     wm.autoConnect("Pellet Stove Controller");
 }
 
-void reconnect()
+void reconnect() //Connect to MQTT server
 {
-    // Loop until we're reconnected
+    //Loop until we're reconnected
     while (!client.connected())
     {
         Serial.println(char_mqtt_user);
@@ -140,7 +140,7 @@ void reconnect()
     }
 }
 
-void IRAM_ATTR fullReset()
+void IRAM_ATTR fullReset() //Reset all the settings but without erasing the program
 {
     Serial.println("Resetting…");
     wm.resetSettings();
@@ -308,7 +308,7 @@ void checkStoveReply() //Works only when request is RAM
     }
 }
 
-void getStoveState()
+void getStoveState() //Get detailed stove state
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -319,7 +319,7 @@ void getStoveState()
     checkStoveReply();
 }
 
-void getAmbTemp()
+void getAmbTemp() //Get room temperature
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -330,7 +330,7 @@ void getAmbTemp()
     checkStoveReply();
 }
 
-void getFumeTemp()
+void getFumeTemp() //Get flue gas temperature
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -341,7 +341,7 @@ void getFumeTemp()
     checkStoveReply();
 }
 
-void getFlamePower()
+void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -352,7 +352,7 @@ void getFlamePower()
     checkStoveReply();
 }
 
-void getWaterTemp()
+void getWaterTemp() //Get the temperature of the water (if "idro")
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -363,7 +363,7 @@ void getWaterTemp()
     checkStoveReply();
 }
 
-void getStates()
+void getStates() //Calls all the get…() functions
 {
 
     getStoveState();
@@ -384,10 +384,10 @@ void setup()
     pinMode(ENABLE_RX, OUTPUT);
     digitalWrite(ENABLE_RX, HIGH); //The led of the optocoupler is off
     pinMode(RESET_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(RESET_PIN), fullReset, FALLING);
+    attachInterrupt(digitalPinToInterrupt(RESET_PIN), fullReset, FALLING); //We setup the reinit interrupt
     Serial.begin(115200);
     StoveSerial.begin(1200, SERIAL_MODE, RX_PIN, TX_PIN, false, 256);
-    if (SPIFFS.begin())
+    if (SPIFFS.begin()) //Mount SPIFFS
     {
         Serial.println("SPIFFS system mounted with success");
     }
