@@ -5,8 +5,43 @@
 
 This Arduino program allows to control easily via MQTT a pellet stove equipped with a MicroNova mainboard.
 
+## Working with
+With all stoves equipped with MicroNova mainboard. Known brands:
+- AMG Spa
+- Anselmo Cola
+- Boreal
+- Bronpi
+- Corisit
+- EL.FIRE
+- EOSS
+- EvaCalor
+- Extraflame
+- Fontana Calore
+- Fonte Flamme
+- Galletti
+- Globe-Fire
+- Jolly Mec
+- Karmek
+- Klover
+- Laminox
+- LMX
+- Lorflam
+- MCZ (MCZ, Cadel, Red, FreePoint)
+- Moretti Design
+- Nordic Fire
+- Stufe a pellet Italia
+- Thermoflux
+- TS
+
+## Confirmed working with
+- RED Loto
+- MCZ Kaika/Face
+
 ## What you need
-txt
+- An ESP8266 (I recommend the D1 Mini) or an ESP32 (not tested yet!).
+- 3 PC817.
+- 3 500 Ohms resistors.
+- That's all!
 
 ## The circuit
 ![image](https://user-images.githubusercontent.com/57588282/128608590-39b0e0ff-b224-42bd-bb20-524a78f282f6.png)
@@ -16,6 +51,14 @@ txt
 `TX` is D4 (GPIO2) on ESP8266 or GPIO33 on ESP32.
 
 The optocouplers are used to convert between 3.3V and 5V logic and also to protect the pellet stove and the ESP from each other in case of problem.
+
+## Stove's mainboard pinout
+There is a 4 pin connector (CN13) with:
+- 5V
+- 20V
+- Serial
+- GND
+
 ## Uploading firmware
 ### With esptool or NodeMCU PyFlasher
 - Download the hex file corresponding to your board and your language in the [releases section](https://github.com/philibertc/micronova_controller/releases),
@@ -43,7 +86,7 @@ First of all, if you use Home Assistant read [this paragraph](#home-assistant).
 - The `mqtt_topic`, it's the common part between all the topics (default: `micronova`).
 - The `ambtemp_topic`, this is the topic where you can read the ambient temperature (`mqtt_topic`**`/ambtemp`**).
 - The `fumetemp_topic`, this is the topic on which you can read the temperature of the fumes (`mqtt_topic`**`/fumetemp`**).
-- The `watertemp_topic`, this is the topic on which you can read the water temperature (only if you have a "idro" pellet stove) (`mqtt_topic`**`/watertemp`**).
+- The `watertemp_topic`, this is the topic on which you can read the water temperature (only if you have a hydro pellet stove) (`mqtt_topic`**`/watertemp`**).
 - The `flame_topic`, this is the topic on which you can read the power of the flame (0, 1, 2, 3, 4, 5) (`mqtt_topic`**`/flamepower`**).
 - The `state_topic`, this is the topic containing the detailed status of the stove (`mqtt_topic`**`/state`**).
 - The `onoff_topic`, this is the topic informing if the stove is turned off or on (`mqtt_topic`**`/onoff`**).
@@ -61,3 +104,7 @@ If you want to reset all the settings here is what you can do:
 - `esptool erase_flash` but this will also delete the program.
 ## Home Assistant
 Here is what to add to `configuration.yaml`:
+
+## Disclaimer
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
