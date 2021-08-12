@@ -352,7 +352,7 @@ void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
     checkStoveReply();
 }
 
-void getWaterTemp() //Get the temperature of the water (if "idro")
+void getWaterTemp() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
