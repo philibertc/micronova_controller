@@ -38,9 +38,9 @@ With all stoves equipped with MicroNova mainboard. Known brands:
 - MCZ Kaika/Face
 
 ## What you need
-- An ESP8266 (I recommend the D1 Mini) or an ESP32 (not tested yet!).
-- 3 PC817.
-- 3 500 Ohms resistors.
+- An ESP8266 (I recommend the D1 Mini). (approx. 4€)
+- 3 PC817. (less than 2€ for 20pcs)
+- 3 510 Ohms resistors. (less than 2€ for 100pcs)
 - That's all!
 
 ## The circuit
