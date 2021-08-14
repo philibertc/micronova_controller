@@ -1,3 +1,6 @@
 /.vscode
 /ArduinoBuild
 /tests/esp8266/test2bis_read_all_addresses.ino
+/EDA/Schema/schema.pro
+/EDA/Schema/schema.sch-bak
+/EDA/Schema/schema-cache.lib
