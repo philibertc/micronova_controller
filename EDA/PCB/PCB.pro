@@ -1,6 +1,6 @@
-update=ven. 13 août 2021 17:31:13
+update=Sat 14 Aug 2021 12:44:13 CEST
 version=1
-last_client=kicad
+last_client=pcbnew
 [general]
 version=1
 RootSch=
@@ -55,7 +55,7 @@ OthersTextSizeH=1
 OthersTextSizeThickness=0.15
 OthersTextItalic=0
 OthersTextUpright=1
-SolderMaskClearance=0
+SolderMaskClearance=0.2
 SolderMaskMinWidth=0
 SolderPasteClearance=0
 SolderPasteRatio=-0

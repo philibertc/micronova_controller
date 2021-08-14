@@ -35,12 +35,6 @@ F 3 "http://www.soselectronic.cz/a_info/resource/d/pc817.pdf" H 4750 3950 50  00
 	1    4750 3950
 	-1   0    0    -1  
 $EndComp
-Text GLabel 8250 4250 2    50   Input ~ 0
-Stove_Serial
-Text GLabel 8250 4550 2    50   Input ~ 0
-5V_Stove
-Text GLabel 8250 4400 2    50   Input ~ 0
-0V_Stove
 Wire Wire Line
 	5050 5050 7900 5050
 Wire Wire Line
@@ -73,10 +67,6 @@ Wire Wire Line
 	5050 4050 5150 4050
 Wire Wire Line
 	4450 5050 4200 5050
-Wire Wire Line
-	7900 4400 8250 4400
-Wire Wire Line
-	7550 4250 8250 4250
 Wire Wire Line
 	7350 4550 8150 4550
 Wire Wire Line
@@ -228,31 +218,6 @@ Wire Wire Line
 Connection ~ 2650 5100
 Wire Wire Line
 	7550 4050 7550 4250
-Wire Wire Line
-	8900 4400 8900 4100
-Wire Wire Line
-	8900 4100 8250 4100
-Wire Wire Line
-	8250 4100 8250 4250
-Wire Wire Line
-	8900 4500 8700 4500
-Wire Wire Line
-	8700 4500 8700 4350
-Wire Wire Line
-	8700 4350 8250 4350
-Wire Wire Line
-	8250 4350 8250 4400
-Wire Wire Line
-	8900 4600 8700 4600
-Wire Wire Line
-	8700 4600 8700 4750
-Wire Wire Line
-	8700 4750 8150 4750
-Wire Wire Line
-	8150 4750 8150 4550
-Connection ~ 8150 4550
-Wire Wire Line
-	8150 4550 8250 4550
 $Comp
 L Connector:Conn_01x01_Female 3.3V_In1
 U 1 1 611A0527
@@ -264,4 +229,20 @@ F 3 "~" H 8950 3850 50  0001 C CNN
 	1    8950 3850
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	8150 4600 8150 4550
+Wire Wire Line
+	8150 4600 8900 4600
+Wire Wire Line
+	8400 4500 8400 4400
+Wire Wire Line
+	7900 4400 8400 4400
+Wire Wire Line
+	8400 4500 8900 4500
+Wire Wire Line
+	8900 4400 8500 4400
+Wire Wire Line
+	8500 4400 8500 4250
+Wire Wire Line
+	7550 4250 8500 4250
 $EndSCHEMATC
