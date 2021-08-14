@@ -1,4 +1,4 @@
-update=Sat 14 Aug 2021 12:44:13 CEST
+update=Sat 14 Aug 2021 17:15:39 CEST
 version=1
 last_client=pcbnew
 [general]
@@ -55,7 +55,7 @@ OthersTextSizeH=1
 OthersTextSizeThickness=0.15
 OthersTextItalic=0
 OthersTextUpright=1
-SolderMaskClearance=0.2
+SolderMaskClearance=0
 SolderMaskMinWidth=0
 SolderPasteClearance=0
 SolderPasteRatio=-0
