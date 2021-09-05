@@ -82,7 +82,7 @@ uint8_t stoveState, fumesTemp, flamePower, waterTemp;
 float ambTemp;
 char stoveRxData[2]; //When the heating is sending data, it sends two bytes: a checksum and the value
 
-void saveParamsCallback() //Save params to SPIFFS
+void saveConfigCallback() //Save params to SPIFFS
 {
     Serial.println("Get Params:");
     Serial.println(custom_mqtt_server.getValue());
@@ -110,7 +110,7 @@ void setup_wifi() //Setup WiFiManager and connect to WiFi
     wm.addParameter(&custom_mqtt_user);
     wm.addParameter(&custom_mqtt_pass);
     wm.addParameter(&custom_hydro_mode);
-    wm.setSaveParamsCallback(saveParamsCallback); //Saves the settings in SPIFFS
+    wm.setSaveConfigCallback(saveConfigCallback); //Saves the settings in SPIFFS
     wm.setConnectTimeout(30);
     wm.autoConnect("Pellet Stove Controller");
 }
@@ -158,7 +158,7 @@ void callback(char *topic, byte *payload, unsigned int length)
         Serial.print((char)payload[i]);
     }
     Serial.println();
-    if ((char *)payload == "ON")
+    if ((char)payload[1] == 'N')
     {
         for (int i = 0; i < 4; i++)
         {
@@ -166,7 +166,7 @@ void callback(char *topic, byte *payload, unsigned int length)
             delay(1);
         }
     }
-    else if ((char *)payload == "OFF")
+    else if ((char)payload[1] == 'F')
     {
         for (int i = 0; i < 4; i++)
         {
