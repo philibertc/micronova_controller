@@ -174,6 +174,14 @@ void callback(char *topic, byte *payload, unsigned int length)
             delay(1);
         }
     }
+    else if ((char)payload[0] == '0')
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            StoveSerial.write(stoveOff[i]);
+            delay(1);
+        }
+    }
     else if ((char)payload[0] == '1')
     {
         for (int i = 0; i < 4; i++)
