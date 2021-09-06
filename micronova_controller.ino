@@ -50,6 +50,8 @@ String fumetemp_topic;
 char char_fumetemp_topic[50];
 String watertemp_topic;
 char char_watertemp_topic[50];
+String waterpres_topic;
+char char_waterpres_topic[50];
 String state_topic;
 char char_state_topic[50];
 String flame_topic;
@@ -67,24 +69,20 @@ int int_hydro_mode;
 
 const char stoveOn[4] = {0x80, 0x21, 0x01, 0xA2};
 const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
-const char stove1[4] = {0x80, 0x34, 0x01, 0xB5};
-const char stove2[4] = {0x80, 0x34, 0x02, 0xB6};
-const char stove3[4] = {0x80, 0x34, 0x03, 0xB7};
-const char stove4[4] = {0x80, 0x34, 0x04, 0xB8};
-const char stove5[4] = {0x80, 0x34, 0x05, 0xB9};
-/*const char stove1[4] = {0xA0, 0x7F, 0x01, 0x};
-const char stove2[4] = {0xA0, 0x7F, 0x02, 0x};
-const char stove3[4] = {0xA0, 0x7F, 0x03, 0x};
-const char stove4[4] = {0xA0, 0x7F, 0x04, 0x};
-const char stove5[4] = {0xA0, 0x7F, 0x05, 0x};*/
+const char stove1[4] = {0x80, 0x19, 0x01, 0x9A};
+const char stove2[4] = {0x80, 0x19, 0x02, 0x9B};
+const char stove3[4] = {0x80, 0x19, 0x03, 0x9C};
+const char stove4[4] = {0x80, 0x19, 0x04, 0x9D};
+const char stove5[4] = {0x80, 0x19, 0x05, 0x9E};
 
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
 #define fumesTempAddr 0x5A
 #define waterTempAddr 0x03
+#define waterPresAddr 0x3C
 #define flamePowerAddr 0x34
 uint8_t stoveState, fumesTemp, flamePower, waterTemp;
-float ambTemp;
+float ambTemp, waterPres;
 char stoveRxData[2]; //When the heating is sending data, it sends two bytes: a checksum and the value
 
 void saveConfigCallback() //Save params to SPIFFS
@@ -167,24 +165,44 @@ void callback(char *topic, byte *payload, unsigned int length)
     {
         for (int i = 0; i < 4; i++)
         {
-            StoveSerial.write(stoveOn[i]);
-            delay(1);
+            if (stoveState > 5)
+            {
+                StoveSerial.write(stoveOn[i]);
+                delay(1);
+            }
+            else if (stoveState == 0)
+            {
+                StoveSerial.write(stoveOn[i]);
+                delay(1);
+            }
         }
     }
     else if ((char)payload[1] == 'F')
     {
         for (int i = 0; i < 4; i++)
         {
-            StoveSerial.write(stoveOff[i]);
-            delay(1);
+            if (stoveState < 5)
+            {
+                if (stoveState > 0)
+                {
+                    StoveSerial.write(stoveOff[i]);
+                    delay(1);
+                }
+            }
         }
     }
     else if ((char)payload[0] == '0')
     {
         for (int i = 0; i < 4; i++)
         {
-            StoveSerial.write(stoveOff[i]);
-            delay(1);
+            if (stoveState < 5)
+            {
+                if (stoveState > 0)
+                {
+                    StoveSerial.write(stoveOff[i]);
+                    delay(1);
+                }
+            }
         }
     }
     else if ((char)payload[0] == '1')
@@ -227,6 +245,22 @@ void callback(char *topic, byte *payload, unsigned int length)
             delay(1);
         }
     }
+    /*else if ((char)payload[0] == '1')
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (stoveState > 5)
+            {
+                StoveSerial.write(stoveOn[i]);
+                delay(1);
+            }
+            else if (stoveState == 0)
+            {
+                StoveSerial.write(stoveOn[i]);
+                delay(1);
+            }
+        }
+    }*/
     else if ((char)payload[2] == 's')
     {
         fullReset();
@@ -317,6 +351,11 @@ void checkStoveReply() //Works only when request is RAM
             client.publish(char_watertemp_topic, String(waterTemp).c_str(), true);
             Serial.printf("T. water %d\n", waterTemp);
             break;
+        case waterPresAddr:
+            waterPres = val * 10;
+            client.publish(char_waterpres_topic, String(waterPres).c_str(), true);
+            Serial.printf("Pressure %d\n", waterPres);
+            break;
         }
     }
 }
@@ -376,6 +415,17 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     checkStoveReply();
 }
 
+void getWaterPres() //Get the temperature of the water (if you have an hydro heater)
+{
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(waterPresAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}
+
 void getStates() //Calls all the get…() functions
 {
 
@@ -389,6 +439,7 @@ void getStates() //Calls all the get…() functions
     if (int_hydro_mode == 1)
     {
         getWaterTemp();
+        getWaterPres();
     }
 }
 
@@ -431,6 +482,7 @@ void setup()
         ambtemp_topic += mqtt_topic;
         fumetemp_topic += mqtt_topic;
         watertemp_topic += mqtt_topic;
+        waterpres_topic += mqtt_topic;
         flame_topic += mqtt_topic;
         state_topic += mqtt_topic;
         onoff_topic += mqtt_topic;
@@ -438,6 +490,7 @@ void setup()
         ambtemp_topic += "/ambtemp";
         fumetemp_topic += "/fumetemp";
         watertemp_topic += "/watertemp";
+        waterpres_topic += "/waterpres";
         flame_topic += "/flamepower";
         state_topic += "/state";
         onoff_topic += "/onoff";
@@ -445,6 +498,7 @@ void setup()
         ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
         fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
         watertemp_topic.toCharArray(char_watertemp_topic, 50);
+        waterpres_topic.toCharArray(char_waterpres_topic, 50);
         flame_topic.toCharArray(char_flame_topic, 50);
         state_topic.toCharArray(char_state_topic, 50);
         onoff_topic.toCharArray(char_onoff_topic, 50);
