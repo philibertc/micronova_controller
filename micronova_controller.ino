@@ -171,6 +171,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 delay(1);
             }
         }
+        delay(20);
         getStates();
     }
     else if ((char)payload[1] == 'F')
@@ -186,6 +187,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 }
             }
         }
+        delay(20);
         getStates();
     }
     else if ((char)payload[0] == '0')
@@ -201,6 +203,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 }
             }
         }
+        delay(20);
         getStates();
     }
     else if ((char)payload[0] == '1')
@@ -217,6 +220,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 StoveSerial.write(stoveOn[i]);
                 delay(1);
             }
+            delay(20);
             getStates();
         }
     }
@@ -262,27 +266,39 @@ void checkStoveReply() //Works only when request is RAM
                 break;
             case 2:
                 client.publish(char_state_topic, "Pellet loading", true);
+                delay(1000);
+                client.publish(char_onoff_topic, "ON", true);
                 break;
             case 3:
                 client.publish(char_state_topic, "Ignition", true);
+                delay(1000);
+                client.publish(char_onoff_topic, "ON", true);
                 break;
             case 4:
                 client.publish(char_state_topic, "Work", true);
+                delay(1000);
+                client.publish(char_onoff_topic, "ON", true);
                 break;
             case 5:
                 client.publish(char_state_topic, "Brazier cleaning", true);
                 break;
             case 6:
                 client.publish(char_state_topic, "Final cleaning", true);
+                delay(1000);
+                client.publish(char_onoff_topic, "OFF", true);
                 break;
             case 7:
                 client.publish(char_state_topic, "Standby", true);
+                delay(1000);
+                client.publish(char_onoff_topic, "OFF", true);
                 break;
             case 8:
                 client.publish(char_state_topic, "Pellet missing", true);
                 break;
             case 9:
                 client.publish(char_state_topic, "Ignition failure", true);
+                delay(1000);
+                client.publish(char_onoff_topic, "OFF", true);
                 break;
             case 10:
                 client.publish(char_state_topic, "Alarm", true);
