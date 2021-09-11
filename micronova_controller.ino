@@ -69,11 +69,6 @@ int int_hydro_mode;
 
 const char stoveOn[4] = {0x80, 0x21, 0x01, 0xA2};
 const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
-const char stove1[4] = {0x80, 0x19, 0x01, 0x9A};
-const char stove2[4] = {0x80, 0x19, 0x02, 0x9B};
-const char stove3[4] = {0x80, 0x19, 0x03, 0x9C};
-const char stove4[4] = {0x80, 0x19, 0x04, 0x9D};
-const char stove5[4] = {0x80, 0x19, 0x05, 0x9E};
 
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
@@ -209,46 +204,6 @@ void callback(char *topic, byte *payload, unsigned int length)
     {
         for (int i = 0; i < 4; i++)
         {
-            StoveSerial.write(stove1[i]);
-            delay(1);
-        }
-    }
-    else if ((char)payload[0] == '2')
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            StoveSerial.write(stove2[i]);
-            delay(1);
-        }
-    }
-    else if ((char)payload[0] == '3')
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            StoveSerial.write(stove3[i]);
-            delay(1);
-        }
-    }
-    else if ((char)payload[0] == '4')
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            StoveSerial.write(stove4[i]);
-            delay(1);
-        }
-    }
-    else if ((char)payload[0] == '5')
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            StoveSerial.write(stove5[i]);
-            delay(1);
-        }
-    }
-    /*else if ((char)payload[0] == '1')
-    {
-        for (int i = 0; i < 4; i++)
-        {
             if (stoveState > 5)
             {
                 StoveSerial.write(stoveOn[i]);
@@ -260,7 +215,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 delay(1);
             }
         }
-    }*/
+    }
     else if ((char)payload[2] == 's')
     {
         fullReset();
