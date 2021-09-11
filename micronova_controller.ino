@@ -171,6 +171,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 delay(1);
             }
         }
+        getStates();
     }
     else if ((char)payload[1] == 'F')
     {
@@ -185,6 +186,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 }
             }
         }
+        getStates();
     }
     else if ((char)payload[0] == '0')
     {
@@ -199,6 +201,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 }
             }
         }
+        getStates();
     }
     else if ((char)payload[0] == '1')
     {
@@ -214,6 +217,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 StoveSerial.write(stoveOn[i]);
                 delay(1);
             }
+            getStates();
         }
     }
     else if ((char)payload[2] == 's')
