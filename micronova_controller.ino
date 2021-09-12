@@ -73,9 +73,13 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
 #define fumesTempAddr 0x3E
+#define flamePowerAddr 0x34
+#define tempSetAddr 0x7D
+#define fansSpeedAddr 0x7E
+#define ecoOffAddr 0x1E
+#define ecoTimeAddr 0x1B
 #define waterTempAddr 0x03
 #define waterPresAddr 0x3C
-#define flamePowerAddr 0x34
 uint8_t stoveState, fumesTemp, flamePower, waterTemp;
 float ambTemp, waterPres;
 char stoveRxData[2]; //When the heating is sending data, it sends two bytes: a checksum and the value
@@ -325,6 +329,12 @@ void checkStoveReply() //Works only when request is RAM
             client.publish(char_flame_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
             break;
+        /*
+        case tempSetAddr:
+        case fansSpeedAddr:
+        case ecoOffAddr:
+        case ecoTimeAddr:
+        */
         case waterTempAddr:
             waterTemp = val;
             client.publish(char_watertemp_topic, String(waterTemp).c_str(), true);
@@ -383,6 +393,50 @@ void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
     checkStoveReply();
 }
 
+void getTempSet() //Get the thermostat setting
+{
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(tempSetAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}
+
+void getFansSpeed() //Get the fans's speed (0, 1, 2, 3, 4, 5)
+{
+    const byte readByte = 0x20;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(fansSpeedAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}
+
+void getEcoOff() //Get the Eco Off state (0, 1)
+{
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(ecoOffAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}
+
+void getEcoTime() //Get the Eco Off time
+{
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(ecoTimeAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}
+
 void getWaterTemp() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
@@ -415,6 +469,14 @@ void getStates() //Calls all the get…() functions
     getFumeTemp();
     delay(100);
     getFlamePower();
+    /*delay(100);
+    getTempSet();
+    delay(100);
+    getFansSpeed();
+    delay(100);
+    getEcoOff();
+    delay(100);
+    getEcoTime();*/
     if (int_hydro_mode == 1)
     {
         getWaterTemp();
