@@ -72,7 +72,7 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
-#define fumesTempAddr 0x5A
+#define fumesTempAddr 0x3E
 #define waterTempAddr 0x03
 #define waterPresAddr 0x3C
 #define flamePowerAddr 0x34
