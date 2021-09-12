@@ -171,6 +171,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 delay(1);
             }
         }
+        client.publish(char_onoff_topic, "ON", true);
         delay(1000);
         getStates();
     }
@@ -187,6 +188,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 }
             }
         }
+        client.publish(char_onoff_topic, "OFF", true);
         delay(1000);
         getStates();
     }
@@ -203,6 +205,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 }
             }
         }
+        client.publish(char_onoff_topic, "OFF", true);
         delay(1000);
         getStates();
     }
@@ -220,6 +223,7 @@ void callback(char *topic, byte *payload, unsigned int length)
                 StoveSerial.write(stoveOn[i]);
                 delay(1);
             }
+            client.publish(char_onoff_topic, "ON", true);
             delay(1000);
             getStates();
         }
