@@ -7,3 +7,4 @@
 - [ ] Eco off timer writing and reading
 - [ ] Thermostat writing and reading
 - [ ] Ping distance sensor
+- [ ] Intake air temp
