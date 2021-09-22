@@ -44,20 +44,28 @@ String mqtt_user;
 char char_mqtt_user[50];
 String mqtt_pass;
 char char_mqtt_pass[50];
+String state_topic;
+char char_state_topic[50];
+String onoff_topic;
+char char_onoff_topic[50];
 String ambtemp_topic;
 char char_ambtemp_topic[50];
 String fumetemp_topic;
 char char_fumetemp_topic[50];
+String flame_topic;
+char char_flame_topic[50];
+String tempset_topic;
+char char_tempset_topic[50];
+String fanspeed_topic;
+char char_fanspeed_topic[50];
+String ecooff_topic;
+char char_ecooff_topic[50];
+String ecotime_topic;
+char char_ecotime_topic[50];
 String watertemp_topic;
 char char_watertemp_topic[50];
 String waterpres_topic;
 char char_waterpres_topic[50];
-String state_topic;
-char char_state_topic[50];
-String flame_topic;
-char char_flame_topic[50];
-String onoff_topic;
-char char_onoff_topic[50];
 String in_topic;
 char char_in_topic[50];
 String hydro_mode;
@@ -80,7 +88,7 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 #define ecoTimeAddr 0x1B
 #define waterTempAddr 0x03
 #define waterPresAddr 0x3C
-uint8_t stoveState, fumesTemp, flamePower, waterTemp;
+uint8_t stoveState, fumesTemp, flamePower, tempSet, fansSpeed, ecoOff, ecoTime, waterTemp;
 float ambTemp, waterPres;
 char stoveRxData[2]; //When the heating is sending data, it sends two bytes: a checksum and the value
 
@@ -329,12 +337,26 @@ void checkStoveReply() //Works only when request is RAM
             client.publish(char_flame_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
             break;
-        /*
         case tempSetAddr:
+            tempSet = val;
+            client.publish(char_tempset_topic, String(tempSet).c_str(), true);
+            Serial.printf("Thermostat %d\n", tempSet);
+            break;
         case fansSpeedAddr:
+            fansSpeed = val;
+            client.publish(char_fanspeed_topic, String(fansSpeed).c_str(), true);
+            Serial.printf("F. speed %d\n", fansSpeed);
+            break;
         case ecoOffAddr:
+            ecoOff = val;
+            client.publish(char_ecooff_topic, String(ecoOff).c_str(), true);
+            Serial.printf("Eco off %s\n", ecoOff ? "ON" : "OFF");
+            break;
         case ecoTimeAddr:
-        */
+            ecoTime = val;
+            client.publish(char_ecotime_topic, String(ecoTime).c_str(), true);
+            Serial.printf("Stop time %d\n", ecoTime);
+            break;
         case waterTempAddr:
             waterTemp = val;
             client.publish(char_watertemp_topic, String(waterTemp).c_str(), true);
@@ -469,14 +491,14 @@ void getStates() //Calls all the get…() functions
     getFumeTemp();
     delay(100);
     getFlamePower();
-    /*delay(100);
+    delay(100);
     getTempSet();
     delay(100);
     getFansSpeed();
     delay(100);
     getEcoOff();
     delay(100);
-    getEcoTime();*/
+    getEcoTime();
     if (int_hydro_mode == 1)
     {
         getWaterTemp();
@@ -520,29 +542,36 @@ void setup()
         int_mqtt_port = mqtt_port.toInt();
         mqtt_topic = topicString.c_str();
         mqtt_topic.trim();
-        ambtemp_topic += mqtt_topic;
-        fumetemp_topic += mqtt_topic;
-        watertemp_topic += mqtt_topic;
-        waterpres_topic += mqtt_topic;
-        flame_topic += mqtt_topic;
         state_topic += mqtt_topic;
         onoff_topic += mqtt_topic;
+        ambtemp_topic += mqtt_topic;
+        fumetemp_topic += mqtt_topic;
+        flame_topic += mqtt_topic;
+        tempset_topic += mqtt_topic;
+        fanspeed_topic += mqtt_topic;
+        ecooff_topic += mqtt_topic;
+        ecotime_topic += mqtt_topic;
+        watertemp_topic += mqtt_topic;
+        waterpres_topic += mqtt_topic;
         in_topic += mqtt_topic;
-        ambtemp_topic += "/ambtemp";
-        fumetemp_topic += "/fumetemp";
-        watertemp_topic += "/watertemp";
-        waterpres_topic += "/waterpres";
-        flame_topic += "/flamepower";
         state_topic += "/state";
         onoff_topic += "/onoff";
+        ambtemp_topic += "/ambtemp";
+        fumetemp_topic += "/fumetemp";
+        tempset_topic += "/tempset";
+        fanspeed_topic += "/fanspeed";
+        ecooff_topic += "/ecooff";
+        ecotime_topic += "/ecotime";
+        watertemp_topic += "/watertemp";
+        waterpres_topic += "/waterpres";
         in_topic += "/intopic";
-        ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
-        fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
-        watertemp_topic.toCharArray(char_watertemp_topic, 50);
-        waterpres_topic.toCharArray(char_waterpres_topic, 50);
-        flame_topic.toCharArray(char_flame_topic, 50);
         state_topic.toCharArray(char_state_topic, 50);
         onoff_topic.toCharArray(char_onoff_topic, 50);
+        ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
+        fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
+        flame_topic.toCharArray(char_flame_topic, 50);
+        watertemp_topic.toCharArray(char_watertemp_topic, 50);
+        waterpres_topic.toCharArray(char_waterpres_topic, 50);
         in_topic.toCharArray(char_in_topic, 50);
         mqtt_user = userString.c_str();
         mqtt_user.trim();
