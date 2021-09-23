@@ -122,7 +122,7 @@ void setup_wifi() //Setup WiFiManager and connect to WiFi
     wm.addParameter(&custom_hydro_mode);
     wm.setSaveConfigCallback(saveConfigCallback); //Saves the settings in SPIFFS
     wm.setConnectTimeout(30);
-    wm.autoConnect("Pellet Stove Controller");
+    wm.autoConnect("Pellet heater controller");
 }
 
 void reconnect() //Connect to MQTT server
@@ -601,7 +601,7 @@ void loop()
     {
         previousMillis = 0;
     }
-    if (currentMillis - previousMillis >= 10000)
+    if (currentMillis - previousMillis >= 25000)
     {
         previousMillis = currentMillis;
         getStates();
