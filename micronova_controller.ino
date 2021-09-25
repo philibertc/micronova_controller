@@ -417,7 +417,7 @@ void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
 
 void getTempSet() //Get the thermostat setting
 {
-    const byte readByte = 0x00;
+    const byte readByte = 0x20;
     StoveSerial.write(readByte);
     delay(1);
     StoveSerial.write(tempSetAddr);
@@ -491,10 +491,10 @@ void getStates() //Calls all the get…() functions
     delay(100);
     getFlamePower();
     delay(100);
-    getTempSet();
+    /*getTempSet();
     delay(100);
     getFansSpeed();
-    /*delay(100);
+    delay(100);
     getEcoOff();
     delay(100);
     getEcoTime();*/

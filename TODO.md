@@ -1,13 +1,13 @@
 ### Things to implement in the firmware
 - [X] Water pressure read
 - [X] Fans speed control (will not be implemented if EEPROM, _not implemented_)
-- [X] Fans speed reading
+- [ ] Fans speed reading
 - [ ] Flame power control (maybe it has to be set in EEPROM, maybe RAM 0x19)
-- [X] Eco off state reading
+- [ ] Eco off state reading
 - [ ] Eco off state writing
-- [X] Eco off timer reading
+- [ ] Eco off timer reading
 - [ ] Eco off timer writing
-- [X] Thermostat reading
+- [ ] Thermostat reading
 - [ ] Thermostat writing
 - [ ] Ping distance sensor
 - [ ] Intake air temp
