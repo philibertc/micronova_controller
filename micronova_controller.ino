@@ -483,7 +483,6 @@ void getWaterPres() //Get the temperature of the water (if you have an hydro hea
 
 void getStates() //Calls all the get…() functions
 {
-
     getStoveState();
     delay(100);
     getAmbTemp();
@@ -491,14 +490,14 @@ void getStates() //Calls all the get…() functions
     getFumeTemp();
     delay(100);
     getFlamePower();
-    delay(100);
+    /*delay(100);
     getTempSet();
     delay(100);
     getFansSpeed();
     delay(100);
     getEcoOff();
     delay(100);
-    getEcoTime();
+    getEcoTime();*/
     if (int_hydro_mode == 1)
     {
         getWaterTemp();
