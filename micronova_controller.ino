@@ -490,11 +490,11 @@ void getStates() //Calls all the get…() functions
     getFumeTemp();
     delay(100);
     getFlamePower();
-    /*delay(100);
+    delay(100);
     getTempSet();
     delay(100);
     getFansSpeed();
-    delay(100);
+    /*delay(100);
     getEcoOff();
     delay(100);
     getEcoTime();*/
@@ -557,6 +557,7 @@ void setup()
         onoff_topic += "/onoff";
         ambtemp_topic += "/ambtemp";
         fumetemp_topic += "/fumetemp";
+        flame_topic += "/flamepower";
         tempset_topic += "/tempset";
         fanspeed_topic += "/fanspeed";
         ecooff_topic += "/ecooff";
@@ -569,6 +570,10 @@ void setup()
         ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
         fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
         flame_topic.toCharArray(char_flame_topic, 50);
+        tempset_topic.toCharArray(char_tempset_topic, 50);
+        fanspeed_topic.toCharArray(char_fanspeed_topic, 50);
+        ecooff_topic.toCharArray(char_ecooff_topic, 50);
+        ecotime_topic.toCharArray(char_ecotime_topic, 50);
         watertemp_topic.toCharArray(char_watertemp_topic, 50);
         waterpres_topic.toCharArray(char_waterpres_topic, 50);
         in_topic.toCharArray(char_in_topic, 50);
