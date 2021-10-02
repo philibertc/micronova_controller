@@ -331,7 +331,7 @@ void checkStoveReply() //Works only when request is RAM
             Serial.printf("T. water %d\n", waterTemp);
             break;
         case waterPresAddr:
-            waterPres = val * 10;
+            waterPres = val / 10;
             client.publish(char_waterpres_topic, String(waterPres).c_str(), true);
             Serial.printf("Pressure %d\n", waterPres);
             break;
