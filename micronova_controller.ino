@@ -44,6 +44,8 @@ String mqtt_user;
 char char_mqtt_user[50];
 String mqtt_pass;
 char char_mqtt_pass[50];
+String pong_topic;
+char char_pong_topic[50];
 String state_topic;
 char char_state_topic[50];
 String onoff_topic;
@@ -457,6 +459,7 @@ void setup()
         int_mqtt_port = mqtt_port.toInt();
         mqtt_topic = topicString.c_str();
         mqtt_topic.trim();
+        pong_topic += mqtt_topic;
         state_topic += mqtt_topic;
         onoff_topic += mqtt_topic;
         ambtemp_topic += mqtt_topic;
@@ -465,6 +468,7 @@ void setup()
         watertemp_topic += mqtt_topic;
         waterpres_topic += mqtt_topic;
         in_topic += mqtt_topic;
+        pong_topic += "/pong";
         state_topic += "/state";
         onoff_topic += "/onoff";
         ambtemp_topic += "/ambtemp";
@@ -473,6 +477,7 @@ void setup()
         watertemp_topic += "/watertemp";
         waterpres_topic += "/waterpres";
         in_topic += "/intopic";
+        pong_topic.toCharArray(char_pong_topic, 50);
         state_topic.toCharArray(char_state_topic, 50);
         onoff_topic.toCharArray(char_onoff_topic, 50);
         ambtemp_topic.toCharArray(char_ambtemp_topic, 50);
@@ -513,5 +518,6 @@ void loop()
     {
         previousMillis = currentMillis;
         getStates();
+        client.publish(char_pong_topic, "Powered up");
     }
 }
