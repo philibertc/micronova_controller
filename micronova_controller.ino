@@ -80,7 +80,7 @@ const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
 #define waterPresAddr 0x3C
 uint8_t stoveState, fumesTemp, flamePower, tempSet, waterTemp;
 float ambTemp, waterPres;
-char stoveRxData[2]; //When the heating is sending data, it sends two bytes: a checksum and the value
+char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
 
 void saveConfigCallback() //Save params to SPIFFS
 {
