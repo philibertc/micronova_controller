@@ -19,6 +19,9 @@ void checkStoveReply() //Works only when request is RAM
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
         Serial.printf("Param=%01x value=%01x", param, value)
+        Serial.print(param, HEX);
+        Serial.print("  ");
+        Serial.println(value);
     }
 }
 
@@ -42,7 +45,7 @@ void setup()
     delay(2000);
     for (int shift = 0; shift < 256; shift++) {
         readStoveRegister((byte)shift);
-        delay(100);
+        delay(70);
     }
 }
 
