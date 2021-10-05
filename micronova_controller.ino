@@ -231,6 +231,18 @@ void callback(char *topic, byte *payload, unsigned int length)
             getStates();
         }
     }
+    else if ((char)payload[0] == 'f')
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            StoveSerial.write(forceOff[i]);
+            delay(1);
+
+            client.publish(char_onoff_topic, "OFF", true);
+            delay(1000);
+            getStates();
+        }
+    }
     else if ((char)payload[2] == 's')
     {
         fullReset();
