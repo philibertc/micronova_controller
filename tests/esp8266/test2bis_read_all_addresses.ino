@@ -3,6 +3,8 @@ SoftwareSerial StoveSerial;
 
 #define ENABLE_RX D2
 
+char stoveRxData[2];
+
 void checkStoveReply() //Works only when request is RAM
 {
     uint8_t rxCount = 0;
@@ -18,10 +20,10 @@ void checkStoveReply() //Works only when request is RAM
         byte val = stoveRxData[1];
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
-        Serial.printf("Param=%01x value=%01x", param, value)
+        Serial.printf("Param=%01x value=%01x", param, val);
         Serial.print(param, HEX);
         Serial.print("  ");
-        Serial.println(value);
+        Serial.println(val);
     }
 }
 
