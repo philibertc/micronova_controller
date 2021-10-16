@@ -11,3 +11,4 @@
 - [ ] Thermostat writing
 - [ ] Ping distance sensor
 - [ ] Intake air temp
+- [ ] Deep Sleep

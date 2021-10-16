@@ -33,6 +33,7 @@ WiFiManagerParameter custom_mqtt_user("user", "mqtt_user", "", 40);
 WiFiManagerParameter custom_mqtt_pass("pass", "mqtt_pass", "", 40);
 WiFiManagerParameter custom_hydro_mode("hydro", "hydro_mode", "0", 2);
 
+int deepSleep = 0;
 long previousMillis;
 
 String mqtt_server;
@@ -233,15 +234,26 @@ void callback(char *topic, byte *payload, unsigned int length)
     }
     else if ((char)payload[0] == 'f')
     {
-        for (int i = 0; i < 4; i++)
+        if ((char)payload[1] == 'o')
         {
-            StoveSerial.write(forceOff[i]);
-            delay(1);
+            for (int i = 0; i < 4; i++)
+            {
+                StoveSerial.write(forceOff[i]);
+                delay(1);
 
-            client.publish(char_onoff_topic, "OFF", true);
-            delay(1000);
-            getStates();
+                client.publish(char_onoff_topic, "OFF", true);
+                delay(1000);
+                getStates();
+            }
         }
+    }
+    else if ((char)payload[0] == 'S')
+    {
+        deepSleep = 1;
+    }
+    else if ((char)payload[0] == 'W')
+    {
+        deepSleep = 0;
     }
     else if ((char)payload[2] == 's')
     {
@@ -533,4 +545,9 @@ void loop()
         getStates();
         client.publish(char_pong_topic, "Powered up");
     }
+    /*if (deepSleep == 1)   //Does not work without hardaware modification (a cable must be connected between RST and D0)
+    {
+        Serial.println("Deep Sleep");
+        ESP.deepSleepInstant(300e6);
+    }*/
 }
