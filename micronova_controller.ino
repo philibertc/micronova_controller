@@ -306,7 +306,7 @@ void checkStoveReply() //Works only when request is RAM
                 client.publish(char_onoff_topic, "ON", true);
                 break;
             case 4:
-                client.publish(char_state_topic, "Work", true);
+                client.publish(char_state_topic, "Working", true);
                 delay(1000);
                 client.publish(char_onoff_topic, "ON", true);
                 break;
@@ -543,7 +543,7 @@ void loop()
     {
         previousMillis = currentMillis;
         getStates();
-        client.publish(char_pong_topic, "Powered up");
+        client.publish(char_pong_topic, "Connected");
     }
     /*if (deepSleep == 1)   //Does not work without hardaware modification (a cable must be connected between RST and D0)
     {
