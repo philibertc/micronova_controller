@@ -269,12 +269,12 @@ Connection ~ 3550 5100
 $Comp
 L Connector:Screw_Terminal_01x03 J3
 U 1 1 61743262
-P 9100 4650
-F 0 "J3" H 9180 4692 50  0001 L CNN
-F 1 "Screw_Terminal_01x03" H 9180 4601 50  0001 L CNN
-F 2 "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" H 9100 4650 50  0001 C CNN
-F 3 "~" H 9100 4650 50  0001 C CNN
-	1    9100 4650
+P 9650 4650
+F 0 "J3" H 9730 4692 50  0001 L CNN
+F 1 "Screw_Terminal_01x03" H 9730 4601 50  0001 L CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" H 9650 4650 50  0001 C CNN
+F 3 "~" H 9650 4650 50  0001 C CNN
+	1    9650 4650
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -291,9 +291,9 @@ $EndComp
 Wire Wire Line
 	8300 2800 8300 3850
 Wire Wire Line
-	8300 3850 8900 3850
+	8300 3850 8750 3850
 Wire Wire Line
-	7850 3950 8900 3950
+	7850 3950 8750 3950
 Wire Wire Line
 	8400 4400 8400 4700
 Wire Wire Line
@@ -307,15 +307,52 @@ Wire Wire Line
 Wire Wire Line
 	8600 4700 8400 4700
 Wire Wire Line
-	8600 4550 8900 4550
-Wire Wire Line
-	8500 4650 8900 4650
-Wire Wire Line
 	8500 4250 8500 4650
 Wire Wire Line
 	7700 4100 8800 4100
 Wire Wire Line
 	8800 4100 8800 4750
+$Comp
+L Connector:Conn_01x03_Male J5
+U 1 1 6171D8FE
+P 9100 4650
+F 0 "J5" H 9208 4931 50  0001 C CNN
+F 1 "Conn_01x03_Male" H 9208 4840 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 9100 4650 50  0001 C CNN
+F 3 "~" H 9100 4650 50  0001 C CNN
+	1    9100 4650
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	8800 4750 8900 4750
+	8600 4550 9300 4550
+Wire Wire Line
+	8500 4650 9300 4650
+Wire Wire Line
+	8800 4750 9300 4750
+Connection ~ 9300 4550
+Wire Wire Line
+	9300 4550 9450 4550
+Connection ~ 9300 4650
+Wire Wire Line
+	9300 4650 9450 4650
+Connection ~ 9300 4750
+Wire Wire Line
+	9300 4750 9450 4750
+$Comp
+L Connector:Conn_01x02_Male J4
+U 1 1 6172DC16
+P 8550 3850
+F 0 "J4" H 8658 4031 50  0001 C CNN
+F 1 "Conn_01x02_Male" H 8658 3940 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 8550 3850 50  0001 C CNN
+F 3 "~" H 8550 3850 50  0001 C CNN
+	1    8550 3850
+	1    0    0    -1  
+$EndComp
+Connection ~ 8750 3850
+Wire Wire Line
+	8750 3850 8900 3850
+Connection ~ 8750 3950
+Wire Wire Line
+	8750 3950 8900 3950
 $EndSCHEMATC
