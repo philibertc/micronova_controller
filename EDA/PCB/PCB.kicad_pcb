@@ -2,8 +2,13 @@
 
   (general
     (thickness 1.6)
+<<<<<<< Updated upstream
     (drawings 38)
     (tracks 87)
+=======
+    (drawings 39)
+    (tracks 88)
+>>>>>>> Stashed changes
     (zones 0)
     (modules 14)
     (nets 23)
@@ -969,7 +974,8 @@
   (segment (start 105.41 104.394) (end 106.934 104.394) (width 0.25) (layer F.Cu) (net 21))
   (segment (start 104.902 110.49) (end 104.902 110.998) (width 0.25) (layer F.Cu) (net 21))
   (segment (start 104.902 110.998) (end 105.41 110.49) (width 0.25) (layer F.Cu) (net 21))
-  (segment (start 100.33 115.57) (end 104.902 110.998) (width 0.25) (layer F.Cu) (net 21))
+  (segment (start 100.33 115.062) (end 100.33 115.57) (width 0.25) (layer F.Cu) (net 21))
+  (segment (start 104.902 110.49) (end 100.33 115.062) (width 0.25) (layer F.Cu) (net 21))
   (segment (start 102.87 115.57) (end 100.33 118.11) (width 0.25) (layer F.Cu) (net 22))
   (segment (start 113.03 115.57) (end 102.87 115.57) (width 0.25) (layer F.Cu) (net 22))
   (segment (start 104.902 113.538) (end 102.87 115.57) (width 0.25) (layer F.Cu) (net 22))
