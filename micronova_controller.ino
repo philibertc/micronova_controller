@@ -338,9 +338,10 @@ void checkStoveReply() //Works only when request is RAM
             Serial.printf("Stove %s\n", stoveState ? "ON" : "OFF");
             break;
         case ambTempAddr:
-            ambTemp = val / 2;
+            ambTemp = (float)val / 2;
             client.publish(char_ambtemp_topic, String(ambTemp).c_str(), true);
-            Serial.printf("T. amb. %d\n", ambTemp);
+            Serial.print("T. amb. ");
+            Serial.println(ambTemp);
             break;
         case fumesTempAddr:
             fumesTemp = val;
@@ -358,9 +359,10 @@ void checkStoveReply() //Works only when request is RAM
             Serial.printf("T. water %d\n", waterTemp);
             break;
         case waterPresAddr:
-            waterPres = val / 10;
+            waterPres = (float)val / 10;
             client.publish(char_waterpres_topic, String(waterPres).c_str(), true);
-            Serial.printf("Pressure %d\n", waterPres);
+            Serial.print("Pressure ");
+            Serial.println(waterPres);
             break;
         }
     }
