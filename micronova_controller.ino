@@ -183,7 +183,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     {
         for (int i = 0; i < 4; i++)
         {
-            if (stoveState < 5)
+            if (stoveState < 6)
             {
                 if (stoveState > 0)
                 {
@@ -200,7 +200,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     {
         for (int i = 0; i < 4; i++)
         {
-            if (stoveState < 5)
+            if (stoveState < 6)
             {
                 if (stoveState > 0)
                 {
@@ -278,7 +278,7 @@ void checkStoveReply() //Works only when request is RAM
         byte val = stoveRxData[1];
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
-        Serial.printf("Param=%01x value=%01x", param, val);
+        Serial.printf("Param=%01x value=%01x ", param, val);
         switch (param)
         {
         case stoveStateAddr:
@@ -349,7 +349,16 @@ void checkStoveReply() //Works only when request is RAM
             Serial.printf("T. fumes %d\n", fumesTemp);
             break;
         case flamePowerAddr:
-            flamePower = val;
+            if (stoveState < 5)
+            {
+              if (stoveState > 0)
+              {
+                flamePower = map(val, 0, 16, 10, 100);
+              }
+            } else
+            {
+              flamePower = val;
+            }
             client.publish(char_flame_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
             break;
