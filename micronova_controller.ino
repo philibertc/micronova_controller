@@ -240,11 +240,10 @@ void callback(char *topic, byte *payload, unsigned int length)
             {
                 StoveSerial.write(forceOff[i]);
                 delay(1);
-
-                client.publish(char_onoff_topic, "OFF", true);
-                delay(1000);
-                getStates();
             }
+            client.publish(char_onoff_topic, "OFF", true);
+            delay(1000);
+            getStates();
         }
     }
     else if ((char)payload[0] == 'S')
