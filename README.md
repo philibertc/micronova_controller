@@ -82,7 +82,7 @@ A [kit](https://www.tindie.com/products/philibertc/pellet-heater-controller/) or
 The optocouplers are used to convert between 3.3V and 5V logic and also to protect the pellet stove and the ESP from each other in case of problem.
 
 ## Stove's mainboard pinout
-There is a 4 pin connector (CN13) with 5V, 20V, Serial, GND:
+There is a 4 pin connector (CN13 or SERIALE) with 5V, 20V, Serial, GND:
 
 <details>
 <summary><b>Schematics</b></summary>
@@ -130,14 +130,17 @@ First of all, if you use Home Assistant read [this paragraph](#home-assistant).
 - The `onoff_topic`, this is the topic informing if the stove is turned off or on (`mqtt_topic`**`/onoff`**).
 - The `ambtemp_topic`, this is the topic where you can read the ambient temperature (`mqtt_topic`**`/ambtemp`**).
 - The `fumetemp_topic`, this is the topic on which you can read the temperature of the fumes (`mqtt_topic`**`/fumetemp`**).
-- The `flame_topic`, this is the topic on which you can read the power of the flame (0, 1, 2, 3, 4, 5) (`mqtt_topic`**`/flamepower`**).
+- The `flame_topic`, this is the topic on which you can read the power of the flame (in percent) (`mqtt_topic`**`/flamepower`**).
 - The `watertemp_topic`, this is the topic on which you can read the water temperature (only if you have a hydro pellet stove) (`mqtt_topic`**`/watertemp`**).
-- The `waterpres_topic`, this is the topic on which you can read the water pressure (only if you have a hydro pellet stove) (`mqtt_topic`**`/waterpres`**).
+- The `waterpres_topic`, this is the topic on which you can read the water pressure in bars (only if you have a hydro pellet stove) (`mqtt_topic`**`/waterpres`**).
 - The `in_topic`, it is the topic allowing to control the stove (`mqtt_topic`**`/intopic`**).
 
 ### Controlling the stove
 - To light the stove send `ON` to `in_topic`, __without retain flag__.
 - To turn off the stove send `OFF` to `in_topic`, with or without retain flag.
+- To force extinction of the stove send `force` to `in_topic`, __without retain flag__.
+- To put the ESP into deep sleep send `Sleep` to `in_topic`, with retain flag.
+- To wake up the ESP send `Wake` to `in_topic`, with retain flag. (When the ESP is in deep sleep, it wakes up every 5 minutes to check if the `Wake` message has been received.)
 
 ## Reset all settings
 If you want to reset all the settings here is what you can do:
@@ -169,11 +172,7 @@ sensor:
     name: ""    #E.g. "Stove controller power state living room"
     state_topic: "mqtt_topic/pong"
     qos: 0
-  - platform: mqtt
-    name: ""    #E.g. "Stove state living room"
-    state_topic: "mqtt_topic/state"
-    qos: 0
-    icon: mdi:fire-alert
+    icon: mdi:power
   - platform: mqtt
     name: ""    #E.g. "Living room"
     state_topic: "mqtt_topic/ambtemp"
@@ -187,9 +186,15 @@ sensor:
     unit_of_measurement: "°C"
     icon: mdi:thermometer
   - platform: mqtt
+    name: ""    #E.g. "Stove state living room"
+    state_topic: "mqtt_topic/state"
+    qos: 0
+    icon: mdi:fire-alert
+  - platform: mqtt
     name: ""    #E.g. "Flame power living room"
     state_topic: "mqtt_topic/flamepower"
     qos: 0
+    unit_of_measurement: "%"
     icon: mdi:fire
     #Uncomment below if you own an hydro stove
 #  - platform: mqtt
@@ -202,7 +207,7 @@ sensor:
 #    name: ""    #E.g. "Water pressure living room"
 #    state_topic: "mqtt_topic/waterpres"
 #    qos: 0
-#    unit_of_measurement: ""    #Maybe bar
+#    unit_of_measurement: "bar"
 #    icon: mdi:gauge
 ```
 
