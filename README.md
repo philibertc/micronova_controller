@@ -212,7 +212,7 @@ sensor:
 ```
 
 ## Thanks
-Thanks to @pedrware for the photo of the mainboard.  
+Thanks to [@pedrware](https://github.com/pedrware) for the photo of the mainboard and his explanations of some of the problems encountered.  
 Thanks to [ridiculouslab](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) for his analysis of the serial protocol.
 
 ## License
