@@ -9,15 +9,18 @@ SoftwareSerial StoveSerial;
 
 //0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms(to be investigated)
 
-#define ambTemp 0x01
-#define fumeTemp 0x5A
-#define stovePower 0x34
-uint8_t stoveState, tempAmbient, tempFumes, flamePower;
-char stoveRxData[2];
+#define stoveStateAddr 0x21
+#define ambTempAddr 0x01
+#define fumesTempAddr 0x3E
+#define flamePowerAddr 0x34
+#define waterTempAddr 0x03
+#define waterPresAddr 0x3C
+uint8_t stoveState, fumesTemp, flamePower, tempSet, waterTemp;
+float ambTemp, waterPres;
+char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
 
 void checkStoveReply() //Works only when request is RAM
 {
-    delay(20);
     uint8_t rxCount = 0;
     stoveRxData[0] = 0x00;
     stoveRxData[1] = 0x00;
@@ -32,84 +35,126 @@ void checkStoveReply() //Works only when request is RAM
         byte val = stoveRxData[1];
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
-        Serial.printf("Param=%01x value=%01x", param, val);
+        Serial.printf("Param=%01x value=%01x ", param, val);
         switch (param)
-        { 
-        case stoveStatus:
+        {
+        case stoveStateAddr:
             stoveState = val;
-            Serial.printf("Stove %s\n", stoveState ? "ON" : "OFF");
+            Serial.print("Stove state ");
+            Serial.println(stoveState);
             break;
-        case ambTemp:
-            tempAmbient = val / 2;
-            Serial.printf("T. amb. %d\n", tempAmbient);
+        case ambTempAddr:
+            ambTemp = (float)val / 2;
+            Serial.print("T. amb. ");
+            Serial.println(ambTemp);
             break;
-        case fumeTemp:
-            tempFumes = val;
-            Serial.printf("T. fumes %d\n", tempFumes);
+        case fumesTempAddr:
+            fumesTemp = val;
+            Serial.printf("T. fumes %d\n", fumesTemp);
             break;
-        case stovePower:
-            flamePower = val;
-            Serial.printf("T. fumes %d\n", flamePower);
+        case flamePowerAddr:
+            if (stoveState < 5)
+            {
+              if (stoveState > 0)
+              {
+                flamePower = map(val, 0, 16, 10, 100);
+              }
+            } else
+            {
+              flamePower = val;
+            }
+            Serial.printf("Fire %d\n", flamePower);
+            break;
+        case waterTempAddr:
+            waterTemp = val;
+            Serial.printf("T. water %d\n", waterTemp);
+            break;
+        case waterPresAddr:
+            waterPres = (float)val / 10;
+            Serial.print("Pressure ");
+            Serial.println(waterPres);
             break;
         }
     }
 }
 
-void getStoveState()
+void getStoveState() //Get detailed stove state
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(stoveStatus);
+    StoveSerial.write(stoveStateAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
-void getStovePower()
+void getAmbTemp() //Get room temperature
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(stovePower);
+    StoveSerial.write(ambTempAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
-    
 }
 
-void getAmbTemp()
+void getFumeTemp() //Get flue gas temperature
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(ambTemp);
+    StoveSerial.write(fumesTempAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
-void getFumeTemp()
+void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
     delay(1);
-    StoveSerial.write(fumeTemp);
+    StoveSerial.write(flamePowerAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
-void getStates()
+void getWaterTemp() //Get the temperature of the water (if you have an hydro heater)
 {
-  
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(waterTempAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(80);
+    checkStoveReply();
+}
+
+void getWaterPres() //Get the temperature of the water (if you have an hydro heater)
+{
+    const byte readByte = 0x00;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(waterPresAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(80);
+    checkStoveReply();
+}
+
+void getStates() //Calls all the get…() functions
+{
     getStoveState();
-    delay(100);
-    getStovePower();
-    delay(100);
     getAmbTemp();
-    delay(100);
     getFumeTemp();
+    getFlamePower();
+    if (int_hydro_mode == 1)
+    {
+        getWaterTemp();
+        getWaterPres();
+    }
 }
 
 void setup()

@@ -262,7 +262,6 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void checkStoveReply() //Works only when request is RAM
 {
-    delay(20);
     uint8_t rxCount = 0;
     stoveRxData[0] = 0x00;
     stoveRxData[1] = 0x00;
@@ -383,7 +382,7 @@ void getStoveState() //Get detailed stove state
     delay(1);
     StoveSerial.write(stoveStateAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
@@ -394,7 +393,7 @@ void getAmbTemp() //Get room temperature
     delay(1);
     StoveSerial.write(ambTempAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
@@ -405,7 +404,7 @@ void getFumeTemp() //Get flue gas temperature
     delay(1);
     StoveSerial.write(fumesTempAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
@@ -416,7 +415,7 @@ void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
     delay(1);
     StoveSerial.write(flamePowerAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
@@ -427,7 +426,7 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     delay(1);
     StoveSerial.write(waterTempAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
@@ -438,18 +437,15 @@ void getWaterPres() //Get the temperature of the water (if you have an hydro hea
     delay(1);
     StoveSerial.write(waterPresAddr);
     digitalWrite(ENABLE_RX, LOW);
-    delay(60);
+    delay(80);
     checkStoveReply();
 }
 
 void getStates() //Calls all the get…() functions
 {
     getStoveState();
-    delay(100);
     getAmbTemp();
-    delay(100);
     getFumeTemp();
-    delay(100);
     getFlamePower();
     if (int_hydro_mode == 1)
     {
