@@ -21,7 +21,7 @@ void checkStoveReply() //Works only when request is RAM
         byte val = stoveRxData[1];
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
-        Serial.printf("Param=%01x value=%01x ", param, val);
+        Serial.printf("Param=%01x value=%d\n ", param, val);
     }
 }
 
