@@ -37,6 +37,7 @@ all stoves equipped with MicroNova mainboard.
 - Fonte Flamme
 - Galletti
 - Globe-Fire
+- Italiana Camini
 - Jolly Mec
 - Karmek
 - Kepo
