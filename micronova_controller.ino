@@ -355,7 +355,7 @@ void checkStoveReply() //Works only when request is RAM
               }
             } else
             {
-              flamePower = val;
+              flamePower = 0;
             }
             client.publish(char_flame_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
