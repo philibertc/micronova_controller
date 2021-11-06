@@ -347,15 +347,16 @@ void checkStoveReply() //Works only when request is RAM
             Serial.printf("T. fumes %d\n", fumesTemp);
             break;
         case flamePowerAddr:
-            if (stoveState < 5)
+            if (stoveState < 6)
             {
-              if (stoveState > 0)
-              {
-                flamePower = map(val, 0, 16, 10, 100);
-              }
-            } else
+                if (stoveState > 0)
+                {
+                    flamePower = map(val, 0, 16, 10, 100);
+                }
+            }
+            else
             {
-              flamePower = 0;
+                flamePower = 0;
             }
             client.publish(char_flame_topic, String(flamePower).c_str(), true);
             Serial.printf("Fire %d\n", flamePower);
@@ -444,12 +445,17 @@ void getWaterPres() //Get the temperature of the water (if you have an hydro hea
 void getStates() //Calls all the get…() functions
 {
     getStoveState();
+    delay(100);
     getAmbTemp();
+    delay(100);
     getFumeTemp();
+    delay(100);
     getFlamePower();
     if (int_hydro_mode == 1)
     {
+        delay(100);
         getWaterTemp();
+        delay(100);
         getWaterPres();
     }
 }
