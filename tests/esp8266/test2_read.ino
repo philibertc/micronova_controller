@@ -35,13 +35,12 @@ void checkStoveReply() //Works only when request is RAM
         byte val = stoveRxData[1];
         byte checksum = stoveRxData[0];
         byte param = checksum - val;
-        Serial.printf("Param=%01x value=%01x ", param, val);
+        Serial.printf("Param=%01x value=%d ", param, val);
         switch (param)
         {
         case stoveStateAddr:
             stoveState = val;
-            Serial.print("Stove state ");
-            Serial.println(stoveState);
+            Serial.printf("Stove state %d\n", stoveState);
             break;
         case ambTempAddr:
             ambTemp = (float)val / 2;
@@ -53,16 +52,7 @@ void checkStoveReply() //Works only when request is RAM
             Serial.printf("T. fumes %d\n", fumesTemp);
             break;
         case flamePowerAddr:
-            if (stoveState < 5)
-            {
-              if (stoveState > 0)
-              {
-                flamePower = map(val, 0, 16, 10, 100);
-              }
-            } else
-            {
-              flamePower = val;
-            }
+            flamePower = val;
             Serial.printf("Fire %d\n", flamePower);
             break;
         case waterTempAddr:
@@ -150,11 +140,9 @@ void getStates() //Calls all the get…() functions
     getAmbTemp();
     getFumeTemp();
     getFlamePower();
-    if (int_hydro_mode == 1)
-    {
-        getWaterTemp();
-        getWaterPres();
-    }
+    getWaterTemp();
+    getWaterPres();
+}
 }
 
 void setup()
