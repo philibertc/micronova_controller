@@ -65,6 +65,7 @@ all stoves equipped with MicroNova mainboard.
 - FreePoint Sharp
 - Anselmo Cola Aloe
 - Kalor Compact (boiler)
+- ITC Layma (boiler, fumesTempAddr 0x3E, no water pressure value available)
 
 ## What you need
 A [kit](https://www.tindie.com/products/philibertc/pellet-heater-controller/) or:
