@@ -60,12 +60,16 @@ all stoves equipped with MicroNova mainboard.
 </details>
 
 ## Confirmed working with
+<details>
+<summary><b>Known models</b></summary>
+
 - RED Loto
 - MCZ Kaika/Face
 - FreePoint Sharp
 - Anselmo Cola Aloe
 - Kalor Compact (boiler, fumesTempAddr 0xFF, flamePowerAddr 0x37)
 - ITC Layma (boiler, fumesTempAddr 0x3E, no water pressure value available)
+</details>
 
 ## What you need
 A [kit](https://www.tindie.com/products/philibertc/pellet-heater-controller/) or:
