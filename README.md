@@ -64,7 +64,7 @@ all stoves equipped with MicroNova mainboard.
 - MCZ Kaika/Face
 - FreePoint Sharp
 - Anselmo Cola Aloe
-- Kalor Compact (boiler)
+- Kalor Compact (boiler, fumesTempAddr 0xFF, flamePowerAddr 0x37)
 - ITC Layma (boiler, fumesTempAddr 0x3E, no water pressure value available)
 
 ## What you need
