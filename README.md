@@ -138,6 +138,7 @@ First of all, if you use Home Assistant read [this paragraph](#home-assistant).
 - The `fumetemp_topic`, this is the topic on which you can read the temperature of the fumes (`mqtt_topic`**`/fumetemp`**).
 - The `flame_topic`, this is the topic on which you can read the power of the flame (in percent) (`mqtt_topic`**`/flamepower`**).
 - The `watertemp_topic`, this is the topic on which you can read the water temperature (only if you have a hydro pellet stove) (`mqtt_topic`**`/watertemp`**).
+- The `waterset_topic`, this is the topic on which you can read the requested water temperature (only if you have a hydro pellet stove) (`mqtt_topic`**`/waterset`**).
 - The `waterpres_topic`, this is the topic on which you can read the water pressure in bars (only if you have a hydro pellet stove) (`mqtt_topic`**`/waterpres`**).
 - The `in_topic`, it is the topic allowing to control the stove (`mqtt_topic`**`/intopic`**).
 
@@ -206,6 +207,12 @@ sensor:
 #  - platform: mqtt
 #    name: ""    #E.g. "Water temp living room"
 #    state_topic: "mqtt_topic/watertemp"
+#    qos: 0
+#    unit_of_measurement: "ºC"
+#    icon: mdi:coolant-temperature
+#  - platform: mqtt
+#    name: ""    #E.g. "Water temp setpoint living room"
+#    state_topic: "mqtt_topic/waterset"
 #    qos: 0
 #    unit_of_measurement: "ºC"
 #    icon: mdi:coolant-temperature
