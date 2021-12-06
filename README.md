@@ -68,7 +68,7 @@ all stoves equipped with MicroNova mainboard.
 - FreePoint Sharp
 - Anselmo Cola Aloe
 - Kalor Compact (boiler, fumesTempAddr 0xFF, flamePowerAddr 0x37)
-- ITC Layma (boiler, fumesTempAddr 0x3E, no water pressure value available)
+- ITC Layma (boiler, fumesTempAddr 0x5A, no water pressure value available)
 </details>
 
 ## What you need
