@@ -49,6 +49,7 @@ all stoves equipped with MicroNova mainboard.
 - MCZ (Brisach, Cadel, FreePoint, Pegaso, Red)
 - Moretti Design
 - Nordic Fire
+- Piazetta
 - Sicalor
 - Stufe a pellet Italia
 - Tecnoflam
