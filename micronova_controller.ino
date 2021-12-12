@@ -59,8 +59,8 @@ String flame_topic;
 char char_flame_topic[50];
 String watertemp_topic;
 char char_watertemp_topic[50];
-String waterset_topic;
-char char_waterset_topic[50];
+/*String waterset_topic;
+char char_waterset_topic[50];*/
 String waterpres_topic;
 char char_waterpres_topic[50];
 String in_topic;
@@ -81,9 +81,9 @@ const char forceOff[4] = {0x80, 0x21, 0x00, 0xA1};
 #define fumesTempAddr 0x3E
 #define flamePowerAddr 0x34
 #define waterTempAddr 0x03
-#define waterSetAddr 0x36
+//#define waterSetAddr 0x36
 #define waterPresAddr 0x3C
-uint8_t stoveState, fumesTemp, flamePower, waterTemp, waterSet;
+uint8_t stoveState, fumesTemp, flamePower, waterTemp/*, waterSet*/;
 float ambTemp, waterPres;
 char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
 
@@ -369,11 +369,11 @@ void checkStoveReply() //Works only when request is RAM
             client.publish(char_watertemp_topic, String(waterTemp).c_str(), true);
             Serial.printf("T. water %d\n", waterTemp);
             break;
-        case waterSetAddr:
+        /*case waterSetAddr:
             waterSet = val;
             client.publish(char_waterset_topic, String(waterSet).c_str(), true);
             Serial.printf("T. water set %d\n", waterSet);
-            break;
+            break;*/
         case waterPresAddr:
             waterPres = (float)val / 10;
             client.publish(char_waterpres_topic, String(waterPres).c_str(), true);
@@ -439,7 +439,7 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     checkStoveReply();
 }
 
-void getWaterSet() //Get the temperature of the water (if you have an hydro heater)
+/*void getWaterSet() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -448,7 +448,7 @@ void getWaterSet() //Get the temperature of the water (if you have an hydro heat
     digitalWrite(ENABLE_RX, LOW);
     delay(80);
     checkStoveReply();
-}
+}*/
 
 void getWaterPres() //Get the temperature of the water (if you have an hydro heater)
 {
@@ -475,8 +475,8 @@ void getStates() //Calls all the get…() functions
         delay(100);
         getWaterTemp();
         delay(100);
-        getWaterSet();
-        delay(100);
+        /*getWaterSet();
+        delay(100);*/
         getWaterPres();
     }
 }
@@ -524,7 +524,7 @@ void setup()
         fumetemp_topic += mqtt_topic;
         flame_topic += mqtt_topic;
         watertemp_topic += mqtt_topic;
-        waterset_topic += mqtt_topic;
+        //waterset_topic += mqtt_topic;
         waterpres_topic += mqtt_topic;
         in_topic += mqtt_topic;
         pong_topic += "/pong";
@@ -534,7 +534,7 @@ void setup()
         fumetemp_topic += "/fumetemp";
         flame_topic += "/flamepower";
         watertemp_topic += "/watertemp";
-        waterset_topic += "/waterset";
+        //waterset_topic += "/waterset";
         waterpres_topic += "/waterpres";
         in_topic += "/intopic";
         pong_topic.toCharArray(char_pong_topic, 50);
@@ -544,7 +544,7 @@ void setup()
         fumetemp_topic.toCharArray(char_fumetemp_topic, 50);
         flame_topic.toCharArray(char_flame_topic, 50);
         watertemp_topic.toCharArray(char_watertemp_topic, 50);
-        waterset_topic.toCharArray(char_waterset_topic, 50);
+        //waterset_topic.toCharArray(char_waterset_topic, 50);
         waterpres_topic.toCharArray(char_waterpres_topic, 50);
         in_topic.toCharArray(char_in_topic, 50);
         mqtt_user = userString.c_str();
