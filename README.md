@@ -70,6 +70,7 @@ all stoves equipped with MicroNova mainboard.
 - Anselmo Cola Aloe
 - Kalor Compact (boiler, fumesTempAddr 0xFF, flamePowerAddr 0x37)
 - ITC Layma (boiler, fumesTempAddr 0x5A, no water pressure value available)
+- Piazetta P958D
 </details>
 
 ## What you need
