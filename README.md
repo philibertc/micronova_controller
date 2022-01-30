@@ -71,6 +71,7 @@ all stoves equipped with MicroNova mainboard.
 - Kalor Compact (boiler, fumesTempAddr 0xFF, flamePowerAddr 0x37)
 - ITC Layma (boiler, fumesTempAddr 0x5A, no water pressure value available)
 - Piazetta P958D
+- Piazetta Line
 </details>
 
 ## What you need
