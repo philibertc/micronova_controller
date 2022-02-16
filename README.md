@@ -7,7 +7,8 @@
 </a>
 
 **Kits are available on Tindie!**  
-**_Currently out of stock. V2 will be in stock soon!_**  
+**The Tindie page will be visible again soon.**  
+**_Currently out of stock._**  
 **Here is an overview of the additions:**
 
 - **possibility to reset the settings with a flat screwdriver**
@@ -72,6 +73,8 @@ all stoves equipped with MicroNova mainboard.
 - ITC Layma (boiler, fumesTempAddr 0x5A, no water pressure value available)
 - Piazetta P958D
 - Piazetta Line
+- ETNA Giulia EVO (Micronova J042, fumes temp and power reading doesn't work for the moment)
+- Extraflame Teodora Evo (at least turning on works)
 </details>
 
 ## What you need
