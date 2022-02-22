@@ -75,6 +75,7 @@ all stoves equipped with MicroNova mainboard.
 - Piazetta Line
 - ETNA Giulia EVO (Micronova J042, fumes temp and power reading doesn't work for the moment)
 - Extraflame Teodora Evo (at least turning on works)
+- El.Fire Venice Slim
 </details>
 
 ## What you need
