@@ -22,6 +22,7 @@ HardwareSerial StoveSerial(1);
 
 #include <WiFiManager.h>
 #include <PubSubClient.h>
+#include <ArduinoOTA.h>
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -483,6 +484,9 @@ void getStates() //Calls all the get…() functions
 
 void setup()
 {
+    ArduinoOTA.setHostname("Pelletheater");
+    ArduinoOTA.setPassword("micronova");
+    ArduinoOTA.begin(); 
     pinMode(ENABLE_RX, OUTPUT);
     digitalWrite(ENABLE_RX, HIGH); //The led of the optocoupler is off
     pinMode(RESET_PIN, INPUT_PULLUP);
@@ -564,6 +568,7 @@ void setup()
 
 void loop()
 {
+    ArduinoOTA.handle(); 
     if (!client.connected())
     {
         reconnect();
