@@ -114,25 +114,25 @@ There is a 4 pin connector (CN13 or SERIALE) with 5V, 20V, Serial, GND:
 Explained [here](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) under "Micronova protocol".
 
 ## Uploading firmware
-### With esptool or NodeMCU PyFlasher
-- Download the hex file corresponding to your board and your language in the [releases section](https://github.com/philibertc/micronova_controller/releases),
-- Connect your ESP to your computer,
-- Flash your ESP with that hex file (for esptool: `esptool write_flash *.hex`).
 ### With Arduino IDE
-- Install ESP cards with the board manager (custom URLs: `http://arduino.esp8266.com/stable/package_esp8266com_index.json,https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`),
-- Install WifiManager and PubSubClient libraries,
-- Copy the content of `micronova_controller.ino`,
-- Connect your ESP to your computer and flash.
+- Install ESP cards with the board manager (custom URLs: `http://arduino.esp8266.com/stable/package_esp8266com_index.json,https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`)
+- Install WifiManager, PubSubClient and ArduinoOTA libraries
+- Copy the content of `micronova_controller.ino`
+- Edit the first 6 lines (see below)
+- Connect your ESP to your computer and flash
+- You will be able to update the firmware using the network port (with password micronova)
+
+## Parameters to be modified before compilation
+The first six lines (with #define) must be edited:
+- Optionally adapt `mqtt_port` if you aren't using 1883
+- Optionally adapt `mqtt_topic` if you have multiple stoves
+- Setup `mqtt_user` and `mqtt_pass` (leave "" if you don't have credentials)
+- Optionally set `hydro_mode` from `0` to `1` if your pellet stove has the boiler feature
 
 ## Configure WiFi and the MQTT broker URL
-- Connect to the `Pellet heater controller` WiFi network.
-- Go to 192.168.4.1.
-- Setup your WiFi credentials.
-- Setup `mqtt_server` (the IP of your MQTT broker).
-- Optionally adapt `mqtt_port` if you aren't using 1883.
-- Optionally adapt `base_topic` if you have multiple stoves.
-- Optionally setup `mqtt_user` and `mqtt_pass`.
-- Optionally set `hydro_mode` from `0` to `1` if your pellet stove has the boiler feature.
+- Connect to the `micronova` WiFi network
+- Go to 192.168.4.1
+- Setup your WiFi credentials
 
 ## MQTT details
 First of all, if you use Home Assistant read [this paragraph](#home-assistant).
