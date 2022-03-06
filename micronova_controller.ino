@@ -7,7 +7,7 @@
 
 #include <SoftwareSerial.h>
 SoftwareSerial StoveSerial;
-#define SERIAL_MODE SWSERIAL_8N2 // 8 data bits, parity none, 2 stop bits
+#define SERIAL_MODE SWSERIAL_8N2 //8 data bits, parity none, 2 stop bits
 #define RESET_PIN D5
 #define RX_PIN D3
 #define TX_PIN D4
@@ -35,9 +35,9 @@ long previousMillis;
 #define waterpres_topic mqtt_server "/waterpres"
 #define in_topic mqtt_server "/intopic"
 
-// 0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
+//0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
 
-// Checksum: Code+Address+Value on hexadecimal calculator
+//Checksum: Code+Address+Value on hexadecimal calculator
 
 const char stoveOn[4] = {0x80, 0x21, 0x01, 0xA2};
 const char stoveOff[4] = {0x80, 0x21, 0x06, 0xA7};
@@ -52,9 +52,9 @@ const char forceOff[4] = {0x80, 0x21, 0x00, 0xA1};
 #define waterPresAddr 0x3C
 uint8_t stoveState, fumesTemp, flamePower, waterTemp /*, waterSet*/;
 float ambTemp, waterPres;
-char stoveRxData[2]; // When the heater is sending data, it sends two bytes: a checksum and the value
+char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
 
-void setup_wifi() // Setup WiFiManager and connect to WiFi
+void setup_wifi() //Setup WiFiManager and connect to WiFi
 {
     ArduinoOTA.setHostname(mqtt_topic);
     ArduinoOTA.setPassword("micronova");
@@ -64,16 +64,16 @@ void setup_wifi() // Setup WiFiManager and connect to WiFi
     wm.autoConnect(mqtt_topic);
 }
 
-void reconnect() // Connect to MQTT server
+void reconnect() //Connect to MQTT server
 {
-    // Loop until we're reconnected
+    //Loop until we're reconnected
     while (!client.connected())
     {
         Serial.println(mqtt_user);
         Serial.println(mqtt_pass);
         Serial.print("Attempting MQTT connection...");
         String clientId = "ESPClient-";
-        clientId += String(random(0xffff), HEX); // Random client ID
+        clientId += String(random(0xffff), HEX); //Random client ID
         if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass))
         {
             Serial.println("connected");
@@ -83,22 +83,22 @@ void reconnect() // Connect to MQTT server
             Serial.print("failed, rc=");
             Serial.print(client.state());
             Serial.println(" try again in 5 seconds");
-            // Wait 5 seconds before retrying
+            //Wait 5 seconds before retrying
             delay(5000);
         }
     }
 }
 
-void reconnect() // Connect to MQTT server
+void reconnect() //Connect to MQTT server
 {
-    // Loop until we're reconnected
+    //Loop until we're reconnected
     while (!client.connected())
     {
         Serial.println(mqtt_user);
         Serial.println(mqtt_pass);
         Serial.print("Attempting MQTT connection...");
         String clientId = "ESPClient-";
-        clientId += String(random(0xffff), HEX); // Random client ID
+        clientId += String(random(0xffff), HEX); //Random client ID
         if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass))
         {
             Serial.println("connected");
@@ -108,13 +108,13 @@ void reconnect() // Connect to MQTT server
             Serial.print("failed, rc=");
             Serial.print(client.state());
             Serial.println(" try again in 5 seconds");
-            // Wait 5 seconds before retrying
+            //Wait 5 seconds before retrying
             delay(5000);
         }
     }
 }
 
-void IRAM_ATTR fullReset() // Reset all the settings but without erasing the program
+void IRAM_ATTR fullReset() //Reset all the settings but without erasing the program
 {
     Serial.println("Resetting…");
     wm.resetSettings();
@@ -231,12 +231,12 @@ void callback(char *topic, byte *payload, unsigned int length)
     }
 }
 
-void checkStoveReply() // Works only when request is RAM
+void checkStoveReply() //Works only when request is RAM
 {
     uint8_t rxCount = 0;
     stoveRxData[0] = 0x00;
     stoveRxData[1] = 0x00;
-    while (StoveSerial.available()) // It has to be exactly 2 bytes, otherwise it's an error
+    while (StoveSerial.available()) //It has to be exactly 2 bytes, otherwise it's an error
     {
         stoveRxData[rxCount] = StoveSerial.read();
         rxCount++;
@@ -352,7 +352,7 @@ void checkStoveReply() // Works only when request is RAM
     }
 }
 
-void getStoveState() // Get detailed stove state
+void getStoveState() //Get detailed stove state
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -363,7 +363,7 @@ void getStoveState() // Get detailed stove state
     checkStoveReply();
 }
 
-void getAmbTemp() // Get room temperature
+void getAmbTemp() //Get room temperature
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -374,7 +374,7 @@ void getAmbTemp() // Get room temperature
     checkStoveReply();
 }
 
-void getFumeTemp() // Get flue gas temperature
+void getFumeTemp() //Get flue gas temperature
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -385,7 +385,7 @@ void getFumeTemp() // Get flue gas temperature
     checkStoveReply();
 }
 
-void getFlamePower() // Get the flame power (0, 1, 2, 3, 4, 5)
+void getFlamePower() //Get the flame power (0, 1, 2, 3, 4, 5)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -396,7 +396,7 @@ void getFlamePower() // Get the flame power (0, 1, 2, 3, 4, 5)
     checkStoveReply();
 }
 
-void getWaterTemp() // Get the temperature of the water (if you have an hydro heater)
+void getWaterTemp() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -418,7 +418,7 @@ void getWaterTemp() // Get the temperature of the water (if you have an hydro he
     checkStoveReply();
 }*/
 
-void getWaterPres() // Get the temperature of the water (if you have an hydro heater)
+void getWaterPres() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -429,7 +429,7 @@ void getWaterPres() // Get the temperature of the water (if you have an hydro he
     checkStoveReply();
 }
 
-void getStates() // Calls all the get…() functions
+void getStates() //Calls all the get…() functions
 {
     getStoveState();
     delay(100);
@@ -452,9 +452,9 @@ void getStates() // Calls all the get…() functions
 void setup()
 {
     pinMode(ENABLE_RX, OUTPUT);
-    digitalWrite(ENABLE_RX, HIGH); // The led of the optocoupler is off
+    digitalWrite(ENABLE_RX, HIGH); //The led of the optocoupler is off
     pinMode(RESET_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(RESET_PIN), fullReset, FALLING); // We setup the reinit interrupt
+    attachInterrupt(digitalPinToInterrupt(RESET_PIN), fullReset, FALLING); //We setup the reinit interrupt
     Serial.begin(115200);
     StoveSerial.begin(1200, SERIAL_MODE, RX_PIN, TX_PIN, false, 256);
     setup_wifi();
