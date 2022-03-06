@@ -89,6 +89,31 @@ void reconnect() // Connect to MQTT server
     }
 }
 
+void reconnect() // Connect to MQTT server
+{
+    // Loop until we're reconnected
+    while (!client.connected())
+    {
+        Serial.println(mqtt_user);
+        Serial.println(mqtt_pass);
+        Serial.print("Attempting MQTT connection...");
+        String clientId = "ESPClient-";
+        clientId += String(random(0xffff), HEX); // Random client ID
+        if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass))
+        {
+            Serial.println("connected");
+        }
+        else
+        {
+            Serial.print("failed, rc=");
+            Serial.print(client.state());
+            Serial.println(" try again in 5 seconds");
+            // Wait 5 seconds before retrying
+            delay(5000);
+        }
+    }
+}
+
 void IRAM_ATTR fullReset() // Reset all the settings but without erasing the program
 {
     Serial.println("Resetting…");
@@ -446,6 +471,7 @@ void loop()
         client.subscribe(in_topic);
     }
     client.loop();
+    ArduinoOTA.handle();
     unsigned long currentMillis = millis();
     if (previousMillis > currentMillis)
     {
