@@ -24,16 +24,16 @@ WiFiManager wm;
 int deepSleep = 0;
 long previousMillis;
 
-#define pong_topic mqtt_server "/pong"
-#define state_topic mqtt_server "/state"
-#define onoff_topic mqtt_server "/onoff"
-#define ambtemp_topic mqtt_server "/ambtemp"
-#define fumetemp_topic mqtt_server "/fumetemp"
-#define flame_topic mqtt_server "/flamepower"
-#define watertemp_topic mqtt_server "/watertemp"
-//#define waterset_topic mqtt_server "/waterset"
-#define waterpres_topic mqtt_server "/waterpres"
-#define in_topic mqtt_server "/intopic"
+#define pong_topic mqtt_topic "/pong"
+#define state_topic mqtt_topic "/state"
+#define onoff_topic mqtt_topic "/onoff"
+#define ambtemp_topic mqtt_topic "/ambtemp"
+#define fumetemp_topic mqtt_topic "/fumetemp"
+#define flame_topic mqtt_topic "/flamepower"
+#define watertemp_topic mqtt_topic "/watertemp"
+//#define waterset_topic mqtt_topic "/waterset"
+#define waterpres_topic mqtt_topic "/waterpres"
+#define in_topic mqtt_topic "/intopic"
 
 //0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
 
@@ -458,9 +458,9 @@ void loop()
         getStates();
         client.publish(pong_topic, "Connected");
     }
-    /*if (deepSleep == 1)   //Does not work without hardaware modification (a cable must be connected between RST and D0)
+    if (deepSleep == 1)   //Does not work without hardaware modification (a cable must be connected between RST and D0)
     {
         Serial.println("Deep Sleep");
         ESP.deepSleepInstant(300e6);
-    }*/
+    }
 }
