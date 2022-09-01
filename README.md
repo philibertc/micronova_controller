@@ -7,8 +7,7 @@
 </a>
 
 **Kits are available on Tindie!**  
-**The Tindie page will be visible again soon.**  
-**_Currently out of stock._**  
+**_In stock every month._**  
 **Here is an overview of the additions:**
 
 - **possibility to reset the settings with a flat screwdriver**
