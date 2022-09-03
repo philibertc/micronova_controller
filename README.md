@@ -17,6 +17,10 @@
 
 This Arduino program allows to control easily via MQTT a pellet stove equipped with a MicroNova mainboard.
 
+## License
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+All previous commits [from this one (3 sept 2022)](https://github.com/philibertc/micronova_controller/commit/3b48e56f5a7b02a50885eb272f03c7dd73d8c4e8) are CC-BY-NC-ND and not CC-BY-NC-SA.
+
 ## Working with
 all stoves equipped with MicroNova mainboard.
 <details>
@@ -227,9 +231,6 @@ sensor:
 ## Thanks
 Thanks to [@pedrware](https://github.com/pedrware) for the photo of the mainboard and his explanations of some of the problems encountered.  
 Thanks to [ridiculouslab](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) for his analysis of the serial protocol.
-
-## License
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 
 ## Disclaimer
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
