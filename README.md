@@ -79,8 +79,8 @@ all stoves equipped with MicroNova mainboard.
 
 ## What you need
 A [kit](https://www.tindie.com/products/philibertc/pellet-heater-controller/) or:
-- An ESP8266 (I recommend the D1 Mini). (approx. 4€)
-- 3 PC817. (less than 2€ for 20pcs)
+- An ESP8266 (I recommend the D1 Mini). (approx. 5€)
+- 3 PC817. (less than 4€ for 10pcs)
 - 3 510 Ohms resistors. (less than 2€ for 100pcs)
 - That's all!
 
