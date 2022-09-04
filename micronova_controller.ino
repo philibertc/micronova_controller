@@ -26,6 +26,7 @@ long previousMillis;
 
 #define pong_topic mqtt_topic "/pong"
 #define state_topic mqtt_topic "/state"
+//#define tempset_topic mqtt_topic "/tempset"
 #define onoff_topic mqtt_topic "/onoff"
 #define ambtemp_topic mqtt_topic "/ambtemp"
 #define fumetemp_topic mqtt_topic "/fumetemp"
@@ -45,12 +46,13 @@ const char forceOff[4] = {0x80, 0x21, 0x00, 0xA1};
 
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
+//#define tempSetAddr 0x7D
 #define fumesTempAddr 0x3E
 #define flamePowerAddr 0x34
 #define waterTempAddr 0x03
 //#define waterSetAddr 0x36
 #define waterPresAddr 0x3C
-uint8_t stoveState, fumesTemp, flamePower, waterTemp /*, waterSet*/;
+uint8_t stoveState, /*tempSet, */fumesTemp, flamePower, waterTemp /*, waterSet*/;
 float ambTemp, waterPres;
 char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
 
@@ -287,6 +289,11 @@ void checkStoveReply() //Works only when request is RAM
             Serial.print("T. amb. ");
             Serial.println(ambTemp);
             break;
+        /*case tempSetAddr:
+            tempSet = val;
+            client.publish(tempset_topic, String(tempSet).c_str(), true);
+            Serial.printf("T. set %d\n", tempSet);
+            break;*/
         case fumesTempAddr:
             fumesTemp = val;
             client.publish(fumetemp_topic, String(fumesTemp).c_str(), true);
@@ -349,6 +356,17 @@ void getAmbTemp() //Get room temperature
     checkStoveReply();
 }
 
+/*void getTempSet() //Get the thermostat setting
+{
+    const byte readByte = 0x20;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(tempSetAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(60);
+    checkStoveReply();
+}*/
+
 void getFumeTemp() //Get flue gas temperature
 {
     const byte readByte = 0x00;
@@ -410,6 +428,8 @@ void getStates() //Calls all the get…() functions
     delay(100);
     getAmbTemp();
     delay(100);
+    /*getTempSet();
+    delay(100);*/
     getFumeTemp();
     delay(100);
     getFlamePower();
