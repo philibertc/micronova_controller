@@ -145,6 +145,7 @@ First of all, if you use Home Assistant read [this paragraph](#home-assistant).
 - The `state_topic`, this is the topic containing the detailed status of the stove (`mqtt_topic`**`/state`**).
 - The `onoff_topic`, this is the topic informing if the stove is turned off or on (`mqtt_topic`**`/onoff`**).
 - The `ambtemp_topic`, this is the topic where you can read the ambient temperature (`mqtt_topic`**`/ambtemp`**).
+- The `tempset_topic` (not yet working), this is the topic on which you can read the requested air temperature (`mqtt_topic`**`/tempset`**)
 - The `fumetemp_topic`, this is the topic on which you can read the temperature of the fumes (`mqtt_topic`**`/fumetemp`**).
 - The `flame_topic`, this is the topic on which you can read the power of the flame (in percent) (`mqtt_topic`**`/flamepower`**).
 - The `watertemp_topic`, this is the topic on which you can read the water temperature (only if you have a hydro pellet stove) (`mqtt_topic`**`/watertemp`**).
