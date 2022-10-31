@@ -36,6 +36,8 @@ long previousMillis;
 #define waterpres_topic mqtt_topic "/waterpres"
 #define in_topic mqtt_topic "/intopic"
 
+#define device_information "{\"manufacturer\": \"Philibert Cheminot\",\"identifiers\": [\"7a396f39-80d2-493b-8e8e-31a70e700bc6\"],\"model\": \"Micronova Controller\",\"name\": \"Micronova Controller\",\"sw_version\": \"1.0.0.0\"}"
+
 //0 - OFF, 1 - Starting, 2 - Pellet loading, 3 - Ignition, 4 - Work, 5 - Brazier cleaning, 6 - Final cleaning, 7 - Standby, 8 - Pellet missing alarm, 9 - Ignition failure alarm, 10 - Alarms (to be investigated)
 
 //Checksum: Code+Address+Value on hexadecimal calculator
@@ -78,6 +80,7 @@ void reconnect() //Connect to MQTT server
         clientId += String(random(0xffff), HEX); //Random client ID
         if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass))
         {
+            client.setBufferSize(1024);
             Serial.println("connected");
         }
         else
@@ -88,6 +91,47 @@ void reconnect() //Connect to MQTT server
             //Wait 5 seconds before retrying
             delay(5000);
         }
+    }
+    if (client.connected())
+    {
+      Serial.println("Creating topics for HomeAssistant");
+
+      String switch_topic = "homeassistant/switch/Micronova/Controller/config";
+      String switch_payload = "{\"name\": \"Controller\", \"command_topic\": \"" in_topic "\", \"state_topic\": \"" onoff_topic "\", \"payload_on\": \"ON\", \"payload_off\": \"OFF\", \"state_on\": \"ON\", \"state_off\": \"OFF\", \"retain\":false, \"optimistic\": false, \"qos\": 0, \"icon\": \"mdi:fire\", \"unique_id\": \"d5668e9c-843c-4330-ae53-a5bd135a4412\", \"device\": " device_information "}";
+      client.publish(switch_topic.c_str(), switch_payload.c_str(), true);
+
+      String sensor_topic = "homeassistant/sensor/Micronova/Controller/config";
+      String sensor_payload = "{\"name\": \"Controller\", \"state_topic\": \"" pong_topic "\", \"qos\": 0, \"icon\": \"mdi:power\", \"unique_id\": \"0038ec49-3921-4f1b-9fa9-71acb04052fa\",\"device\": " device_information "}";
+      client.publish(sensor_topic.c_str(), sensor_payload.c_str(), true);
+
+      String temperature_sensor_topic = "homeassistant/sensor/Micronova/Temperature/config";
+      String temperature_sensor_payload = "{\"name\": \"Temperature\", \"state_topic\": \"" ambtemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"ºC\", \"icon\": \"mdi:thermometer\", \"unique_id\": \"9db3245e-6ace-4d14-ac07-844cd68d245c\",\"device\": " device_information "}";
+      client.publish(temperature_sensor_topic.c_str(), temperature_sensor_payload.c_str(), true);
+
+      String fumes_temperature_sensor_topic = "homeassistant/sensor/Micronova/FumesTemperature/config";
+      String fumes_temperature_sensor_payload = "{\"name\": \"Fumes Temperature\", \"state_topic\": \"" fumetemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"ºC\", \"icon\": \"mdi:thermometer\", \"unique_id\": \"3c72e1cf-bc22-499e-9f85-7c7e960f9a95\",\"device\": " device_information "}";
+      client.publish(fumes_temperature_sensor_topic.c_str(), fumes_temperature_sensor_payload.c_str(), true);
+
+      String state_sensor_topic = "homeassistant/sensor/Micronova/State/config";
+      String state_sensor_payload = "{\"name\": \"State\", \"state_topic\": \"" state_topic "\", \"qos\": 0, \"icon\": \"mdi:fire-alert\", \"unique_id\": \"62fe5080-7668-409b-8451-323364b42eff\",\"device\": " device_information "}";
+      client.publish(state_sensor_topic.c_str(), state_sensor_payload.c_str(), true);
+
+      String flame_power_sensor_topic = "homeassistant/sensor/Micronova/FlamePower/config";
+      String flame_power_sensor_payload = "{\"name\": \"Flame Power\", \"state_topic\": \"" flame_topic "\", \"qos\": 0, \"unit_of_measurement\": \"%\", \"icon\": \"mdi:fire\", \"unique_id\": \"c3aecb86-66e2-4358-bccb-e3b620f3d28b\",\"device\": " device_information "}";
+      client.publish(flame_power_sensor_topic.c_str(), flame_power_sensor_payload.c_str(), true);
+
+      if (hydro_mode == 1)
+      {
+        String water_temperature_sensor_topic = "homeassistant/sensor/Micronova/WaterTemperature/config";
+        String water_temperature_sensor_payload = "{\"name\": \"Water Temperature\", \"state_topic\": \"" watertemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"ºC\", \"icon\": \"mdi:coolant-temperature\", \"unique_id\": \"7eb9a6b2-8e26-49f0-b75a-dd97f537d856\",\"device\": " device_information "}";
+        client.publish(water_temperature_sensor_topic.c_str(), water_temperature_sensor_payload.c_str(), true);
+
+        String water_pressure_sensor_topic = "homeassistant/sensor/Micronova/WaterPressure/config";
+        String water_pressure_sensor_payload = "{\"name\": \"Water Pressure\", \"state_topic\": \"" waterpres_topic "\", \"qos\": 0, \"device_class\": \"pressure\", \"unit_of_measurement\": \"bar\", \"icon\": \"mdi:gauge\", \"unique_id\": \"2e272bb3-7b55-4867-bf1a-b8772d0ae90d\", \"device\": " device_information "}";
+        client.publish(water_pressure_sensor_topic.c_str(), water_pressure_sensor_payload.c_str(), true);
+      }
+
+      Serial.println("HomeAssistant topics created.");
     }
 }
 
