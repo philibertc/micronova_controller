@@ -55,6 +55,7 @@ all stoves equipped with MicroNova mainboard.
 - Nordic Fire
 - Piazetta
 - Sicalor
+- Solius
 - Stufe a pellet Italia
 - Tecnoflam
 - Termoflam
@@ -79,6 +80,7 @@ all stoves equipped with MicroNova mainboard.
 - ETNA Giulia EVO (Micronova J042, fumes temp and power reading doesn't work for the moment)
 - Extraflame Teodora Evo (at least turning on works)
 - El.Fire Venice Slim
+- Solius Geres
 </details>
 
 ## What you need

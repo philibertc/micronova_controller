@@ -321,7 +321,7 @@ void checkStoveReply() //Works only when request is RAM
             break;
         /*case waterSetAddr:
             waterSet = val;
-            client.publish(char_waterset_topic, String(waterSet).c_str(), true);
+            client.publish(waterset_topic, String(waterSet).c_str(), true);
             Serial.printf("T. water set %d\n", waterSet);
             break;*/
         case waterPresAddr:
