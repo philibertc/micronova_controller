@@ -46,15 +46,24 @@ const char forceOff[4] = {0x80, 0x21, 0x00, 0xA1};
 
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
-//#define tempSetAddr 0x7D
+#define tempSetAddr 0x7D
+#define tempSetAddrE 0x9D
 #define fumesTempAddr 0x3E
 #define flamePowerAddr 0x34
 #define waterTempAddr 0x03
 //#define waterSetAddr 0x36
 #define waterPresAddr 0x3C
-uint8_t stoveState, /*tempSet, */fumesTemp, flamePower, waterTemp /*, waterSet*/;
+
+#define ramOffset 0x00
+#define EEPROMOffset 0x20
+// preliminary write offsets
+#define writeRAMOffset 0x80
+#define writeEEPROMOffset 0xA0
+
+uint8_t stoveState, tempSet, fumesTemp, flamePower, waterTemp /*, waterSet*/;
 float ambTemp, waterPres;
 char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
+int checksum;
 
 void setup_wifi() //Setup WiFiManager and connect to WiFi
 {
@@ -98,16 +107,30 @@ void IRAM_ATTR fullReset() //Reset all the settings but without erasing the prog
     ESP.restart();
 }
 
+byte CALCSUM(byte *DEST, byte *ADDR, byte *VAL)
+{
+    checksum = 0;
+    checksum = DEST+ADDR+VAL;
+    if (checksum>=256)
+    {
+        checksum=checksum-256;
+    } 
+    return (byte)checksum;
+}
+
 void callback(char *topic, byte *payload, unsigned int length)
 {
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
+ 
     for (int i = 0; i < length; i++)
     {
         Serial.print((char)payload[i]);
     }
     Serial.println();
+    // preliminary for WRITING data
+    //checksum=
     if ((char)payload[1] == 'N')
     {
         for (int i = 0; i < 4; i++)
@@ -289,11 +312,12 @@ void checkStoveReply() //Works only when request is RAM
             Serial.print("T. amb. ");
             Serial.println(ambTemp);
             break;
-        /*case tempSetAddr:
+        case tempSetAddrE:
+            // It's 0x7D + 0x20 = 0x9D, data read from EEPROM
             tempSet = val;
             client.publish(tempset_topic, String(tempSet).c_str(), true);
             Serial.printf("T. set %d\n", tempSet);
-            break;*/
+            break;
         case fumesTempAddr:
             fumesTemp = val;
             client.publish(fumetemp_topic, String(fumesTemp).c_str(), true);
@@ -356,7 +380,7 @@ void getAmbTemp() //Get room temperature
     checkStoveReply();
 }
 
-/*void getTempSet() //Get the thermostat setting
+void getTempSet() //Get the thermostat setting
 {
     const byte readByte = 0x20;
     StoveSerial.write(readByte);
@@ -365,7 +389,7 @@ void getAmbTemp() //Get room temperature
     digitalWrite(ENABLE_RX, LOW);
     delay(60);
     checkStoveReply();
-}*/
+}
 
 void getFumeTemp() //Get flue gas temperature
 {
@@ -400,7 +424,7 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     checkStoveReply();
 }
 
-/*void getWaterSet() //Get the temperature of the water (if you have an hydro heater)
+/* void getWaterSet() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -409,7 +433,8 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     digitalWrite(ENABLE_RX, LOW);
     delay(80);
     checkStoveReply();
-}*/
+}
+*/
 
 void getWaterPres() //Get the temperature of the water (if you have an hydro heater)
 {
