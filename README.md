@@ -28,6 +28,7 @@ all stoves equipped with MicroNova mainboard.
 
 - AMG S.p.A. (Artel, Kalor, Tepor, Foco, Adler)
 - Anselmo Cola
+- L'Asolana
 - Boreal
 - Bronpi
 - Cadel
@@ -81,6 +82,7 @@ all stoves equipped with MicroNova mainboard.
 - Extraflame Teodora Evo (at least turning on works)
 - El.Fire Venice Slim
 - Solius Geres
+- L'Asolana Marina
 </details>
 
 ## What you need
