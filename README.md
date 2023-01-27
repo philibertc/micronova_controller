@@ -15,14 +15,14 @@
 - **D0 and RST are connected for deep sleep**
 - **a row of pins has been added to access unused pins**
 
-This Arduino program allows to control easily via MQTT a pellet stove equipped with a MicroNova mainboard. Hardware details [here.](https://github.com/philibertc/micronova_controller_pcb/)
+This Arduino program allows to control easily via MQTT a pellet stove equipped with a Micronova mainboard. Hardware details [here.](https://github.com/philibertc/micronova_controller_pcb/)
 
 ## License
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 All previous commits [from this one (3 sept 2022)](https://github.com/philibertc/micronova_controller/commit/3b48e56f5a7b02a50885eb272f03c7dd73d8c4e8) are CC-BY-NC-ND and not CC-BY-NC-SA.
 
 ## Working with
-all stoves equipped with MicroNova mainboard.
+all stoves equipped with Micronova mainboard.
 <details>
 <summary><b>Known brands</b></summary>
 
@@ -117,7 +117,7 @@ There is a 4 pin connector (CN13 or SERIALE) with 5V, 20V, Serial, GND:
   
 </details>
 
-## MicroNova protocol
+## Micronova protocol
 Explained [here](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) under "Micronova protocol".
 
 ## Uploading firmware
