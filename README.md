@@ -15,7 +15,8 @@
 - **D0 and RST are connected for deep sleep**
 - **a row of pins has been added to access unused pins**
 
-This Arduino program allows to control easily via MQTT a pellet stove equipped with a Micronova mainboard. Hardware details [here.](https://github.com/philibertc/micronova_controller_pcb/)
+This Arduino program allows to control easily via MQTT a pellet stove equipped with a Micronova mainboard. Hardware details [here.](https://github.com/philibertc/micronova_controller_pcb/)  
+**Discord server: https://github.com/philibertc/micronova_controller/discussions/63**
 
 ## License
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
@@ -73,6 +74,7 @@ all stoves equipped with Micronova mainboard.
 - RED Loto
 - MCZ Kaika/Face
 - FreePoint Sharp
+- Flumenfire
 - Anselmo Cola Aloe
 - Kalor Compact (boiler, fumesTempAddr 0xFF, flamePowerAddr 0x37)
 - ITC Layma (boiler, fumesTempAddr 0x5A, no water pressure value available)
