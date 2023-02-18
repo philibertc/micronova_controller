@@ -105,11 +105,11 @@ void reconnect() //Connect to MQTT server
       client.publish(sensor_topic.c_str(), sensor_payload.c_str(), true);
 
       String temperature_sensor_topic = "homeassistant/sensor/Micronova/Temperature/config";
-      String temperature_sensor_payload = "{\"name\": \"Temperature\", \"state_topic\": \"" ambtemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"ºC\", \"icon\": \"mdi:thermometer\", \"unique_id\": \"9db3245e-6ace-4d14-ac07-844cd68d245c\",\"device\": " device_information "}";
+      String temperature_sensor_payload = "{\"name\": \"Temperature\", \"state_topic\": \"" ambtemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"°C\", \"icon\": \"mdi:thermometer\", \"unique_id\": \"9db3245e-6ace-4d14-ac07-844cd68d245c\",\"device\": " device_information "}";
       client.publish(temperature_sensor_topic.c_str(), temperature_sensor_payload.c_str(), true);
 
       String fumes_temperature_sensor_topic = "homeassistant/sensor/Micronova/FumesTemperature/config";
-      String fumes_temperature_sensor_payload = "{\"name\": \"Fumes Temperature\", \"state_topic\": \"" fumetemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"ºC\", \"icon\": \"mdi:thermometer\", \"unique_id\": \"3c72e1cf-bc22-499e-9f85-7c7e960f9a95\",\"device\": " device_information "}";
+      String fumes_temperature_sensor_payload = "{\"name\": \"Fumes Temperature\", \"state_topic\": \"" fumetemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"°C\", \"icon\": \"mdi:thermometer\", \"unique_id\": \"3c72e1cf-bc22-499e-9f85-7c7e960f9a95\",\"device\": " device_information "}";
       client.publish(fumes_temperature_sensor_topic.c_str(), fumes_temperature_sensor_payload.c_str(), true);
 
       String state_sensor_topic = "homeassistant/sensor/Micronova/State/config";
@@ -123,7 +123,7 @@ void reconnect() //Connect to MQTT server
       if (hydro_mode == 1)
       {
         String water_temperature_sensor_topic = "homeassistant/sensor/Micronova/WaterTemperature/config";
-        String water_temperature_sensor_payload = "{\"name\": \"Water Temperature\", \"state_topic\": \"" watertemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"ºC\", \"icon\": \"mdi:coolant-temperature\", \"unique_id\": \"7eb9a6b2-8e26-49f0-b75a-dd97f537d856\",\"device\": " device_information "}";
+        String water_temperature_sensor_payload = "{\"name\": \"Water Temperature\", \"state_topic\": \"" watertemp_topic "\", \"qos\": 0, \"device_class\": \"temperature\", \"state_class\": \"measurement\", \"unit_of_measurement\": \"°C\", \"icon\": \"mdi:coolant-temperature\", \"unique_id\": \"7eb9a6b2-8e26-49f0-b75a-dd97f537d856\",\"device\": " device_information "}";
         client.publish(water_temperature_sensor_topic.c_str(), water_temperature_sensor_payload.c_str(), true);
 
         String water_pressure_sensor_topic = "homeassistant/sensor/Micronova/WaterPressure/config";
