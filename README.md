@@ -55,6 +55,7 @@ all stoves equipped with Micronova mainboard.
 - MCZ (Brisach, Cadel, FreePoint, Pegaso, Red)
 - Moretti Design
 - Nordic Fire
+- Palladio
 - Piazetta
 - Sicalor
 - Solius
@@ -86,6 +87,7 @@ all stoves equipped with Micronova mainboard.
 - El.Fire Venice Slim
 - Solius Geres
 - L'Asolana Marina
+- Palladio Europa
 </details>
 
 ## What you need
