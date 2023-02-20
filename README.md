@@ -178,64 +178,56 @@ If you want to reset all the settings here is what you can do:
 Here is what to add to `configuration.yaml`:
 
 ```yaml
-switch:
-  - platform: mqtt
-    name: ""    #E.g. "Living room"
-    state_topic: "mqtt_topic/onoff"    #You have to edit that
-    command_topic: "mqtt_topic/intopic"    #Also that
-    payload_on: "ON"
-    payload_off: "OFF"
-    state_on: "ON"
-    state_off: "OFF"
-    retain: false
-    optimistic: false
-    qos: 0
-    icon: mdi:fire
+mqtt:
+    switch:
+      - name: ""    #E.g. "Living room"
+        state_topic: "mqtt_topic/onoff"    #You have to edit that
+        command_topic: "mqtt_topic/intopic"    #Also that
+        payload_on: "ON"
+        payload_off: "OFF"
+        state_on: "ON"
+        state_off: "OFF"
+        retain: false
+        optimistic: false
+        qos: 0
 ```
 
 ```yaml
-sensor:
-  - platform: mqtt
-    name: ""    #E.g. "Stove controller power state living room"
-    state_topic: "mqtt_topic/pong"
-    qos: 0
-    icon: mdi:power
-  - platform: mqtt
-    name: ""    #E.g. "Living room"
-    state_topic: "mqtt_topic/ambtemp"
-    qos: 0
-    unit_of_measurement: "ºC"
-    icon: mdi:thermometer
-  - platform: mqtt
-    name: ""    #E.g. "Fumes temp living room"
-    state_topic: "mqtt_topic/fumetemp"
-    qos: 0
-    unit_of_measurement: "°C"
-    icon: mdi:thermometer
-  - platform: mqtt
-    name: ""    #E.g. "Stove state living room"
-    state_topic: "mqtt_topic/state"
-    qos: 0
-    icon: mdi:fire-alert
-  - platform: mqtt
-    name: ""    #E.g. "Flame power living room"
-    state_topic: "mqtt_topic/flamepower"
-    qos: 0
-    unit_of_measurement: "%"
-    icon: mdi:fire
-    #Uncomment below if you own an hydro stove
-#  - platform: mqtt
-#    name: ""    #E.g. "Water temp living room"
-#    state_topic: "mqtt_topic/watertemp"
-#    qos: 0
-#    unit_of_measurement: "ºC"
-#    icon: mdi:coolant-temperature
-#  - platform: mqtt
-#    name: ""    #E.g. "Water pressure living room"
-#    state_topic: "mqtt_topic/waterpres"
-#    qos: 0
-#    unit_of_measurement: "bar"
-#    icon: mdi:gauge
+  sensor:
+    #Salle à manger
+      - name: ""    #E.g. "Stove controller power state living room"
+        state_topic: "mqtt_topic/pong"
+        qos: 0
+        icon: mdi:power
+      - name: ""    #E.g. "Living room"
+        state_topic: "mqtt_topic/ambtemp"
+        qos: 0
+        unit_of_measurement: "ºC"
+        icon: mdi:thermometer
+      - name: ""    #E.g. "Fumes temp living room"
+        state_topic: "mqtt_topic/fumetemp"
+        qos: 0
+        unit_of_measurement: "°C"
+        icon: mdi:thermometer
+      - name: ""    #E.g. "Stove state living room"
+        state_topic: "mqtt_topic/state"
+        qos: 0
+        icon: mdi:fire-alert
+      - name: ""    #E.g. "Flame power living room"
+        state_topic: "mqtt_topic/flamepower"
+        qos: 0
+        unit_of_measurement: "%"
+        icon: mdi:fire
+      - name: ""    #E.g. "Water temp living room"
+        state_topic: "mqtt_topic/watertemp"
+        qos: 0
+        unit_of_measurement: "ºC"
+        icon: mdi:coolant-temperature
+      - name: ""    #E.g. "Water pressure living room"
+        state_topic: "mqtt_topic/waterpres"
+        qos: 0
+        unit_of_measurement: "bar"
+        icon: mdi:gauge
 ```
 
 ## Thanks
