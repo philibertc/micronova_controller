@@ -26,7 +26,7 @@ long previousMillis;
 
 #define pong_topic mqtt_topic "/pong"
 #define state_topic mqtt_topic "/state"
-//#define tempset_topic mqtt_topic "/tempset"
+#define tempset_topic mqtt_topic "/tempset"
 #define onoff_topic mqtt_topic "/onoff"
 #define ambtemp_topic mqtt_topic "/ambtemp"
 #define fumetemp_topic mqtt_topic "/fumetemp"
@@ -34,6 +34,7 @@ long previousMillis;
 #define watertemp_topic mqtt_topic "/watertemp"
 //#define waterset_topic mqtt_topic "/waterset"
 #define waterpres_topic mqtt_topic "/waterpres"
+#define pwrget_topic mqtt_topic "/stovepower"
 #define in_topic mqtt_topic "/intopic"
 
 #define device_information "{\"manufacturer\": \"Philibert Cheminot\",\"identifiers\": [\"7a396f39-80d2-493b-8e8e-31a70e700bc6\"],\"model\": \"Micronova Controller\",\"name\": \"Micronova Controller\",\"sw_version\": \"1.0.0.0\"}"
@@ -48,15 +49,24 @@ const char forceOff[4] = {0x80, 0x21, 0x00, 0xA1};
 
 #define stoveStateAddr 0x21
 #define ambTempAddr 0x01
-//#define tempSetAddr 0x7D
+#define ambTempAddr 0x01
+#define tempSetAddr 0x7D
+#define tempGetAddr 0x9D
+#define pwrSetAddr 0x7F
+#define pwrGetAddr 0x9F
 #define fumesTempAddr 0x3E
 #define flamePowerAddr 0x34
 #define waterTempAddr 0x03
 //#define waterSetAddr 0x36
 #define waterPresAddr 0x3C
-uint8_t stoveState, /*tempSet, */fumesTemp, flamePower, waterTemp /*, waterSet*/;
+
+uint8_t stoveState, tempSet, pwrSet, fumesTemp, flamePower, waterTemp /*, waterSet*/;
 float ambTemp, waterPres;
 char stoveRxData[2]; //When the heater is sending data, it sends two bytes: a checksum and the value
+int chksum, intfromtemp;
+byte hexdumpo, checksum;
+String rcvTemp;
+String rcvData;
 
 void setup_wifi() //Setup WiFiManager and connect to WiFi
 {
@@ -147,6 +157,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
+ 
     for (int i = 0; i < length; i++)
     {
         Serial.print((char)payload[i]);
@@ -250,6 +261,50 @@ void callback(char *topic, byte *payload, unsigned int length)
     {
         fullReset();
     }
+      else if ((char)payload[0] == 'T')
+    {
+      rcvData="";
+       for (int i = 1; i < length; i++)
+      {
+        rcvData+=(char)payload[i];
+        
+      }
+     intfromtemp = rcvData.toInt()*2;
+     hexdumpo=(byte)intfromtemp;
+     chksum = (0xA0+0x7d+hexdumpo)-256;
+     StoveSerial.write((byte)0xA0);
+     delay(1);
+     StoveSerial.write((byte)0x7D);
+     delay(1);
+     StoveSerial.write((byte)intfromtemp);
+     delay(1);
+     StoveSerial.write((byte)chksum);
+     delay(120);
+     getStates();
+  }
+     else if ((char)payload[0] == 'P')
+    {
+      rcvData="";
+       for (int i = 1; i < length; i++)
+      {
+        rcvData+=(char)payload[i];
+        
+      }
+      intfromtemp = rcvData.toInt();
+      hexdumpo=(byte)intfromtemp;
+      chksum = (0xA0+0x7F+hexdumpo)-256;
+      StoveSerial.write((byte)0xA0);
+     delay(1);
+     StoveSerial.write((byte)0x7F);
+     delay(1);
+     StoveSerial.write((byte)intfromtemp);
+     delay(1);
+     StoveSerial.write((byte)chksum);
+     delay(120);
+     getStates();
+     
+     
+   }
 }
 
 void checkStoveReply() //Works only when request is RAM
@@ -333,11 +388,16 @@ void checkStoveReply() //Works only when request is RAM
             Serial.print("T. amb. ");
             Serial.println(ambTemp);
             break;
-        /*case tempSetAddr:
-            tempSet = val;
+         case tempGetAddr:
+            tempSet = (float)val / 2;
             client.publish(tempset_topic, String(tempSet).c_str(), true);
-            Serial.printf("T. set %d\n", tempSet);
-            break;*/
+            Serial.printf("T. set %d\r\n", tempSet);
+            break;
+        case pwrGetAddr:
+            pwrSet = (float)val;
+            client.publish(pwrget_topic, String(pwrSet).c_str(), true);
+            Serial.printf("Pwr set %d\r\n", pwrSet);
+            break;
         case fumesTempAddr:
             fumesTemp = val;
             client.publish(fumetemp_topic, String(fumesTemp).c_str(), true);
@@ -400,7 +460,7 @@ void getAmbTemp() //Get room temperature
     checkStoveReply();
 }
 
-/*void getTempSet() //Get the thermostat setting
+void getTempSet() //Get the thermostat setting
 {
     const byte readByte = 0x20;
     StoveSerial.write(readByte);
@@ -409,8 +469,17 @@ void getAmbTemp() //Get room temperature
     digitalWrite(ENABLE_RX, LOW);
     delay(60);
     checkStoveReply();
-}*/
-
+}
+void getPwrSet() //Get the thermostat setting
+{
+    const byte readByte = 0x20;
+    StoveSerial.write(readByte);
+    delay(1);
+    StoveSerial.write(pwrSetAddr);
+    digitalWrite(ENABLE_RX, LOW);
+    delay(80);
+    checkStoveReply();
+}
 void getFumeTemp() //Get flue gas temperature
 {
     const byte readByte = 0x00;
@@ -444,7 +513,7 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     checkStoveReply();
 }
 
-/*void getWaterSet() //Get the temperature of the water (if you have an hydro heater)
+/* void getWaterSet() //Get the temperature of the water (if you have an hydro heater)
 {
     const byte readByte = 0x00;
     StoveSerial.write(readByte);
@@ -453,7 +522,8 @@ void getWaterTemp() //Get the temperature of the water (if you have an hydro hea
     digitalWrite(ENABLE_RX, LOW);
     delay(80);
     checkStoveReply();
-}*/
+}
+*/
 
 void getWaterPres() //Get the temperature of the water (if you have an hydro heater)
 {
@@ -472,8 +542,9 @@ void getStates() //Calls all the get…() functions
     delay(100);
     getAmbTemp();
     delay(100);
-    /*getTempSet();
-    delay(100);*/
+    getTempSet();
+    delay(100);
+    getPwrSet();
     getFumeTemp();
     delay(100);
     getFlamePower();
