@@ -2,6 +2,9 @@
 <a href="https://www.tindie.com/products/philibertc/pellet-heater-controller/">
   <img src="https://user-images.githubusercontent.com/57588282/131249215-e0877966-c181-49fa-ae90-59f0a95ad292.png" alt="I sell on Tindie" width=150 />
 </a>
+<a href="https://www.pcbway.com/">
+  <img src="https://github.com/user-attachments/assets/a84aaa9a-8880-4fae-85e0-800d957114d5" alt="Made thanks to PCBWay" width=150 />
+</a>
 <a href="https://www.paypal.com/donate?hosted_button_id=Q48QBGGQTVGTG">
   <img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width=150 />
 </a>
@@ -26,7 +29,9 @@ All previous commits [from this one (3 sept 2022)](https://github.com/philibertc
 
 ## Thanks
 Thanks to [@pedrware](https://github.com/pedrware) for the photo of the mainboard and his explanations of some of the problems encountered.  
-Thanks to [ridiculouslab](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) for his analysis of the serial protocol.
+Thanks to [ridiculouslab](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) for his analysis of the serial protocol.  
+Thanks to the active Discord community, who keep the project moving.  
+Thanks to [PCBWay](https://www.pcbway.com/) for supporting me in the production of PCBs.
 
 ## Disclaimer
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
