@@ -33,7 +33,7 @@ All previous commits [from this one (3 sept 2022)](https://github.com/philibertc
 
 ## Thanks
 Thanks to [@pedrware](https://github.com/pedrware) for the photo of the mainboard and his explanations of some of the problems encountered.  
-Thanks to [ridiculouslab](https://ridiculouslab.altervista.org/en/micronova-protocol-converter/) for his analysis of the serial protocol.  
+Thanks to [ridiculouslab](https://www.ridiculouslab.com/arguments/iot/stufa/micronova_en.php) for his analysis of the serial protocol.  
 Thanks to the active Discord community, who keep the project moving.  
 Thanks to [PCBWay](https://www.pcbway.com/) for supporting me in the production of PCBs.
 
