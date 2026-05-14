@@ -1,9 +1,7 @@
 # micronova_controller ![ESP8266](https://img.shields.io/badge/ESP-8266-000000.svg?longCache=true&style=flat&colorA=CCCC33) ![ESP32](https://img.shields.io/badge/ESP-32-000000.svg?longCache=true&style=flat&colorA=FF3500)
+<a href="https://lectronz.com/stores/philibertc" alt="I sell on Lectronz"><img src="https://lectronz-images.b-cdn.net/static/badges/i-sell-on-lectronz-medium.png" /></a>
 <a href="https://www.tindie.com/products/philibertc/pellet-heater-controller/">
   <img src="https://user-images.githubusercontent.com/57588282/131249215-e0877966-c181-49fa-ae90-59f0a95ad292.png" alt="I sell on Tindie" width=150 />
-</a>
-<a href="https://www.pcbway.com/">
-  <img src="https://github.com/user-attachments/assets/a84aaa9a-8880-4fae-85e0-800d957114d5" alt="Made thanks to PCBWay" width=150 />
 </a>
 <a href="https://www.paypal.com/donate?hosted_button_id=337V43Y2JEU5L">
   <img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width=150 />
@@ -11,9 +9,6 @@
 
 **Kits are available on Tindie!**  
 **_In stock every month._**  
-
-This PCB was produced thanks to PCBWay, which supported me in its creation by providing me with very well-made PCBs. You can get a quote on [pcbway.com](https://pcbway.com) for PCB manufacturing, as well as assembly and even CNC and 3D printing services.
-The PCBs produced by them have always been perfect for me, so give it a try ;)
 
 **Here is an overview of the additions:**
 
