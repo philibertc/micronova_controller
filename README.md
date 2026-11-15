@@ -20,6 +20,45 @@
 This Arduino program allows to control easily via MQTT a pellet stove equipped with a Micronova mainboard. Hardware details [here.](https://github.com/philibertc/micronova_controller_pcb/)  
 **Discord server: https://github.com/philibertc/micronova_controller/discussions/63**
 
+## Firmware 2.0 (dev branch)
+
+### Installation
+Open `micronova_controller.ino` in the Arduino IDE, select your ESP8266 board (e.g. *LOLIN(WEMOS) D1 mini*) and upload.
+Required library: **PubSubClient**. WiFiManager is no longer needed.
+
+### First setup
+1. After flashing, the controller opens a WiFi network named `Micronova-Setup-XXXX`.
+2. Connect to it: the setup page opens automatically (otherwise browse to http://192.168.4.1/).
+3. Pick your network, enter its password and save. The controller restarts and joins it.
+4. Browse to http://micronova.local/ (or its IP address). Default login: `admin` / `micronova`. Change it in **Settings**.
+
+Upgrading from 1.x keeps your WiFi credentials. The MQTT server is now set in **Settings → MQTT** instead of in the code.
+
+If the WiFi network cannot be reached for 30 s, the setup network opens again while the controller keeps retrying.
+To erase the WiFi credentials, **hold RESET_PIN (D5) to GND for 1 second** (flat screwdriver on the reset pads), or send `reset` on the MQTT command topic.
+
+### Web interface
+- **Dashboard**: stove state and metrics, on / off / force off, temperature and power setpoints.
+- **Tests**: what the `tests/esp8266` sketches did, without reflashing: read every metric, on/off cycle, address scan (RAM or EEPROM, with comparison between two scans to spot the right address), raw read/write of a single address.
+- **Addresses**: change the address, memory (RAM/EEPROM) and divisor of each metric if the defaults do not match your stove. Test an address before saving it.
+- **Settings**: WiFi, MQTT, hostname, polling interval, hydro mode, web/OTA password, restart, factory reset.
+
+### MQTT
+Topics, commands and Home Assistant discovery are unchanged (`<topic>/intopic` accepts `ON`, `OFF`, `force off`, `T<temperature>`, `P<power>`, `S`, `W`, `reset`).
+`<topic>/pong` now reports `Disconnected` when the controller goes offline (MQTT last will).
+
+### Source layout
+| File | Role |
+|---|---|
+| `src/config.h` | Pins, factory defaults, protocol constants |
+| `src/metrics.h` | Metrics read from the stove and their default addresses |
+| `src/settings.*` | Persistent settings (emulated EEPROM) |
+| `src/stove.*` | Micronova serial protocol, polling, commands |
+| `src/network.*` | WiFi, setup access point / captive portal, mDNS, OTA, RESET_PIN |
+| `src/mqtt.*` | MQTT and Home Assistant discovery |
+| `src/diagnostics.*` | Address scan and on/off test |
+| `src/web_server.*`, `src/web_ui.h` | HTTP API and web interface |
+
 ## License
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 All previous commits [from this one (3 sept 2022)](https://github.com/philibertc/micronova_controller/commit/3b48e56f5a7b02a50885eb272f03c7dd73d8c4e8) are CC-BY-NC-ND and not CC-BY-NC-SA.
