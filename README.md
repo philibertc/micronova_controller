@@ -43,6 +43,12 @@ To erase the WiFi credentials, **hold RESET_PIN (D5) to GND for 1 second** (flat
 - **Addresses**: change the address, memory (RAM/EEPROM) and divisor of each metric if the defaults do not match your stove. Test an address before saving it.
 - **Settings**: WiFi, MQTT, hostname, polling interval, hydro mode, web/OTA password, restart, factory reset.
 
+| Dashboard | Tests |
+|---|---|
+| <img src="docs/screenshots/dashboard.png" alt="Dashboard: stove state, on/off controls, setpoints and metrics" width="420"> | <img src="docs/screenshots/tests.png" alt="Tests: read every metric, on/off cycle and address scan comparing two scans" width="420"> |
+| **Addresses** | **Settings** |
+| <img src="docs/screenshots/addresses.png" alt="Addresses: editable address, memory and divisor for each metric" width="420"> | <img src="docs/screenshots/settings.png" alt="Settings: WiFi with network scan, MQTT, general and system" width="420"> |
+
 ### MQTT
 Topics, commands and Home Assistant discovery are unchanged (`<topic>/intopic` accepts `ON`, `OFF`, `force off`, `T<temperature>`, `P<power>`, `S`, `W`, `reset`).
 `<topic>/pong` now reports `Disconnected` when the controller goes offline (MQTT last will).
